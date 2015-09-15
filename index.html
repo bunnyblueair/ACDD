@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>ACDD by bunnyblue</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">ACDD</h1>
+      <h2 class="project-tagline">ACDD，Android Component Dynamic Deployment(plugin) Solution,if any question,send me e-mail Solution</h2>
+      <a href="https://github.com/bunnyblue/ACDD" class="btn">View on GitHub</a>
+      <a href="https://github.com/bunnyblue/ACDD/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/bunnyblue/ACDD/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p><a href="http://www.android-gems.com/lib/bunnyblue/ACDD"><img src="http://www.android-gems.com/badge/bunnyblue/ACDD.svg?branch=master" alt="Android Gems"></a></p>
+
+<h1>
+<a id="acddcore--non-proxy--android-dynamic-deployment-framework" class="anchor" href="#acddcore--non-proxy--android-dynamic-deployment-framework" aria-hidden="true"><span class="octicon octicon-link"></span></a>ACDDCore  non-Proxy  Android Dynamic Deployment Framework</h1>
+
+<p><img src="art/ACDD_logo_full.png" alt=""><br>
+ <a href="https://android-arsenal.com/details/1/2056"><img src="https://img.shields.io/badge/Android%20Arsenal-Android%20ACDD-brightgreen.svg?style=flat" alt="Android Arsenal"></a><br>
+<a href="https://gitter.im/bunnyblue/ACDD?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/bunnyblue/ACDD"></a><br>
+ Build Status <a href="https://travis-ci.org/bunnyblue/ACDD"><img src="https://travis-ci.org/bunnyblue/ACDD.svg?branch=master" alt="Build Status"></a></p>
+
+<p>ACDD ,Android Component Dynamic Deployment Framework(Android  Plugin Framework)<br></p>
+
+<p>The MIT License (MIT) Copyright (c) 2015 Bunny Blue,achellies<br></p>
+
+<h3>
+<a id="readme-中文" class="anchor" href="#readme-%E4%B8%AD%E6%96%87" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="README-Zh.md">README-中文</a>
+</h3>
+
+<p><br>use patched aapt  to build Dynamic Module，it's different with  some plugin frameworks which  implement through proxy，any  question open a issue</p>
+
+<h1>
+<a id="simple-project-build-systemaapt-and--has-moved-to-httpsgithubcombunnyblueacddextension" class="anchor" href="#simple-project-build-systemaapt-and--has-moved-to-httpsgithubcombunnyblueacddextension" aria-hidden="true"><span class="octicon octicon-link"></span></a>Simple Project&amp; Build System(aapt and ...) has Moved to <a href="https://github.com/bunnyblue/ACDDExtension">https://github.com/bunnyblue/ACDDExtension</a>
+</h1>
+
+<h3>
+<a id="contributors" class="anchor" href="#contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributors</h3>
+
+<p><a href="https://github.com/achellies">achellies</a><br>
+<a href="https://github.com/bunnyblue">BunnyBlue</a><br></p>
+
+<h2>
+<a id="plugin-start" class="anchor" href="#plugin-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>plugin start</h2>
+
+<p>download aapt from repo,and  you should use build-tool version 22.x.x,
+write your plugin as normal app, ant build  with  hacked aapt.</p>
+
+<h3>
+<a id="plugin-resource-notice" class="anchor" href="#plugin-resource-notice" aria-hidden="true"><span class="octicon octicon-link"></span></a>plugin resource notice</h3>
+
+<p>you can define your package id at Manifest by "versionName",such as versionName:"1.0.1" ,but as a plugin should be versionName:"1.0.10x7a",you will get apk which versionName is "1.0.0" but package id is 0x7a not 0x7f.you can use 0x2 to 0x7,
+also you can define package change packageName "com.myapp.pkgname" to " com.myapp.pkgname0x7a".</p>
+
+<h2>
+<a id="sample--art" class="anchor" href="#sample--art" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sample &amp; Art</h2>
+
+<p><a href="https://github.com/bunnyblue/ACDDExtension/blob/master/Dist/ACDDLauncher.apk">
+  Sample Apk,you can download from here
+</a></p>
+
+<p><img src="https://github.com/bunnyblue/ACDDExtension/raw/master/art/demo.gif" alt="Sample Gif"></p>
+
+<h1>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h1>
+
+<p><a href=""><img src="https://img.shields.io/badge/License-MIT%20License-brightgreen.svg" alt="License"></a><br>
+The MIT License (MIT) Copyright (c) 2015 Bunny Blue,achellies</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/bunnyblue/ACDD">ACDD</a> is maintained by <a href="https://github.com/bunnyblue">bunnyblue</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-63619221-3");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
