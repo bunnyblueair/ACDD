@@ -85,7 +85,8 @@ public class InitExecutor {
     public static boolean optDexFile(String srcDexPath, String oDexFilePath) {
         try {
             if (sDexOptLoaded) {
-                if (isART && ACDDConfig.optART) {
+                if (isART ) {
+                    if (ACDDConfig.optART)
                     dexopt(srcDexPath, oDexFilePath, true, defaultInstruction);
                 } else {
                     dexopt(srcDexPath, oDexFilePath, false, "");

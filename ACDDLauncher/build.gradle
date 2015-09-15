@@ -31,13 +31,12 @@ apply plugin: 'com.android.application'
 dependencies {
     compile fileTree(include: '*.jar', dir: 'libs')
     compile project(':ACDDCore')
-
 }
 def acddGitVersionName = { ->
     try {
         def stdout = new ByteArrayOutputStream()
         exec {
-            commandLine 'git', 'describe', '--tags'//, '--dirty'
+            commandLine 'git', 'describe', '--tags','--long'//, '--dirty'
             standardOutput = stdout
         }
         return stdout.toString().trim()
@@ -61,6 +60,15 @@ def acddGitVersionCode = { ->
 }
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'AndroidDebugKey'
+            keyPassword 'android'
+
+            storeFile rootProject.file('accd_debug.keystore')
+            storePassword 'android'
+        }
+    }
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
     compileOptions {
