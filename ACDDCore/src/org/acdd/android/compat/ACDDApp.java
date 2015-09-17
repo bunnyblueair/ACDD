@@ -33,11 +33,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteException;
 import android.os.Build.VERSION;
-import android.os.Handler;
 import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
@@ -45,16 +45,14 @@ import android.util.Log;
 import org.acdd.android.initializer.ACDDInitializer;
 import org.acdd.android.initializer.BundleParser;
 import org.acdd.framework.InternalConstant;
-import org.acdd.runtime.Globals;
 import org.acdd.runtime.ContextImplHook;
+import org.acdd.runtime.Globals;
 import org.acdd.util.ACDDUtils;
-
-import java.lang.reflect.Field;
 
 
 /****ACDDApp, you can  extend  this class direct****/
 public class ACDDApp extends Application {
-    private static final Handler mAppHandler;
+    private  boolean  accdInited=false;
 
     private Context mBaseContext;
     ACDDInitializer mACDDInitializer;
@@ -62,11 +60,6 @@ public class ACDDApp extends Application {
 
     public ACDDApp() {
 
-    }
-
-
-    public static void runOnUiThread(Runnable runnable) {
-        mAppHandler.post(runnable);
     }
 
     /* (non-Javadoc)
@@ -77,21 +70,25 @@ public class ACDDApp extends Application {
         // TODO Auto-generated method stub
         super.attachBaseContext(base);
         this.mBaseContext = base;
+        initACDD();
+    }
+    public synchronized void initACDD(){
+        if (accdInited) {
+            return;
+        }
         BundleParser.parser(getBaseContext());
 
         try {
-            Field declaredField = Globals.class
-                    .getDeclaredField("sInstalledVersionName");
-            declaredField.setAccessible(true);
-            declaredField.set(null, this.mBaseContext.getPackageManager()
-                    .getPackageInfo(base.getPackageName(), 0).versionName);
-        } catch (Exception e) {
+            Globals.initInstalledVersionName(this.mBaseContext.getPackageManager()
+                    .getPackageInfo(mBaseContext.getPackageName(), 0).versionName);
+        } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
 
         this.mACDDInitializer = new ACDDInitializer(this, getPackageName(),isUpdate());
 
         this.mACDDInitializer.init();
+        accdInited=true;
     }
     private boolean isUpdate() {
         try {
@@ -99,7 +96,6 @@ public class ACDDApp extends Application {
             SharedPreferences sharedPreferences =getSharedPreferences(InternalConstant.ACDD_CONFIGURE, 0);
             int last_version_code = sharedPreferences.getInt("last_version_code", 0);
             CharSequence last_version_name = sharedPreferences.getString("last_version_name", "");
-//return true;
          return packageInfo.versionCode > last_version_code || ((packageInfo.versionCode == last_version_code && !TextUtils.equals(Globals.getInstalledVersionName(), last_version_name)) );
         } catch (Throwable e) {
             Log.e("ACDDInitializer", "Error to get PackageInfo >>>", e);
@@ -164,8 +160,5 @@ public class ACDDApp extends Application {
             return sQLiteDatabase;
         }
     }
-
-    static {
-        mAppHandler = new Handler();
-    }
 }
+
