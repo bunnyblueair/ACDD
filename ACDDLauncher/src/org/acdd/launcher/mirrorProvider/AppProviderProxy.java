@@ -36,7 +36,7 @@ import org.acdd.android.compat.ProviderProxy;
 public class AppProviderProxy extends ProviderProxy {
 
 	public AppProviderProxy() {
-		super("org.acdd.android.appcenter.AppProvider");
+		super("com.acdd.android.appcenter.AppProvider");
 		// TODO Auto-generated constructor stub
 	}
 

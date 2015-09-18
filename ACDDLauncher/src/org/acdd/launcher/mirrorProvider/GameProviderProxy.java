@@ -36,7 +36,7 @@ import org.acdd.android.compat.ProviderProxy;
 public class GameProviderProxy extends ProviderProxy {
 
 	public GameProviderProxy() {
-		super("org.acdd.android.game2.GameProvider");
+		super("com.acdd.android.game2.GameProvider");
 		// TODO Auto-generated constructor stub
 	}
 
