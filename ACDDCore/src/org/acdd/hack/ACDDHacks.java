@@ -161,20 +161,20 @@ public class ACDDHacks extends HackDeclaration implements
         if (sIsReflectChecked) {
             return sIsReflectAvailable;
         }
-        ACDDHacks atlasHacks = new ACDDHacks();
+        ACDDHacks acddHacks = new ACDDHacks();
         try {
-            Hack.setAssertionFailureHandler(atlasHacks);
+            Hack.setAssertionFailureHandler(acddHacks);
             if (VERSION.SDK_INT == 11) {
-                atlasHacks.onAssertionFailure(new HackAssertionException(
+                acddHacks.onAssertionFailure(new HackAssertionException(
                         "Hack Assertion Failed: Android OS Version 11"));
             }
             allClasses();
             allConstructors();
             allFields();
             allMethods();
-            if (atlasHacks.mExceptionArray != null) {
+            if (acddHacks.mExceptionArray != null) {
                 sIsReflectAvailable = false;
-                throw atlasHacks.mExceptionArray;
+                throw acddHacks.mExceptionArray;
             }
             sIsReflectAvailable = true;
             return sIsReflectAvailable;

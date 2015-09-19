@@ -89,7 +89,7 @@ public class Utils {
     /**
      * save ACDD runtime info to sharedPreference
      **/
-    public static void saveAtlasInfoBySharedPreferences(Application application) {
+    public static void saveInfoBySharedPreferences(Application application) {
         Map<String, String> concurrentHashMap = new ConcurrentHashMap<String, String>();
         concurrentHashMap.put(getPackageInfo(application).versionName, "dexopt");
         SharedPreferences sharedPreferences = application.getSharedPreferences(InternalConstant.ACDD_CONFIGURE, Context.MODE_PRIVATE);

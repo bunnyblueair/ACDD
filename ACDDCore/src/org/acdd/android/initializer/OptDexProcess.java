@@ -95,7 +95,7 @@ public class OptDexProcess {
     }
 
     private void finishInstalled() {
-        Utils.saveAtlasInfoBySharedPreferences(this.mApplication);
+        Utils.saveInfoBySharedPreferences(this.mApplication);
         System.setProperty("BUNDLES_INSTALLED", "true");
         this.mApplication.sendBroadcast(new Intent(InternalConstant.ACTION_BROADCAST_BUNDLES_INSTALLED));
     }

@@ -38,8 +38,6 @@ import android.widget.Toast;
 import org.acdd.framework.ACDD;
 import org.acdd.runtime.RuntimeVariables;
 import org.acdd.util.ApkUtils;
-import org.acdd.util.StringUtils;
-
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
 
@@ -47,7 +45,8 @@ import java.io.File;
 
 
 public class SecurityBundleListner implements BundleListener {
-    public static final String PUBLIC_KEY = "";
+    public static final String PUBLIC_KEY = "30820122300d06092a864886f70d01010105000382010f003082010a0282010100bd707bf7328e9140c591920d776fa77f0fbfde6f1576308efee3cb82d1c106e6bd04a3b0a36255821bb4cbe355905fa55cd000bbe3de8c4351a48fb233c02f440bf26b1a881d694e7428d523baf7061b8a3a121596d226d71f2b831d32bbac6ad2de6b58b98ddc277baa77d0fcf46acc03b90a5bc8072198718675a5220691b757e0be8bc81b7562972e8fa0f6efbd462e5d55e840de3b36677807f2171ef1f70549992f8f88450b921a18ae387c737e955fe4c53fb05e37375b4a18b58845e777b4ef73af72a4d42adabf63ace80490396ce479db7b159cc1d8d19c9f6b4ed242af9fe3ee0b8d290c5998e3357b2d98cdf971ff3c67436c0a3b5bcda88a813d0203010001";
+
     ProcessHandler mProcessHandler;
     private Handler mSecurityCheckHandler;
     private HandlerThread mHandlerThread;
@@ -67,11 +66,12 @@ public class SecurityBundleListner implements BundleListener {
 
             if (message != null) {
                 String location = (String) message.obj;
-                if (!TextUtils.isEmpty(location) && !TextUtils.isEmpty(SecurityBundleListner.PUBLIC_KEY)) {
+                if (!TextUtils.isEmpty(location) ) {
                     File bundleFile = ACDD.getInstance().getBundleFile(location);
-                    if (bundleFile != null) {
-                        if (!StringUtils.contains(ApkUtils.getApkPublicKey(bundleFile.getAbsolutePath()), SecurityBundleListner.PUBLIC_KEY)) {
-                            Log.e("SecurityBundleListner", "Security check failed. " + location);
+                    if (bundleFile != null&&!TextUtils.isEmpty(SecurityBundleListner.PUBLIC_KEY)) {
+                        String  bKey=ApkUtils.getApkPublicKey(bundleFile.getAbsolutePath());
+                        if (!SecurityBundleListner.PUBLIC_KEY.equals(bKey)) {
+                            Log.e("SecurityBundleListner", "Security check failed. " + location+" "+bKey);
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
                                 public void run() {

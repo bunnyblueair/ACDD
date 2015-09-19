@@ -75,8 +75,8 @@ public class ACDDInitializer {
             ACDD.getInstance().init(this.mApplication);
             log.debug("ACDD framework inited end " + this.mPackageName + " " + (System.currentTimeMillis() - initStartTime) + " ms");
         } catch (Throwable e) {
-            Log.e("ACDDInitializer", "Could not init atlas framework !!!", e);
-            throw new RuntimeException("atlas initialization fail" + e.getMessage());
+            Log.e("ACDDInitializer", "Could not init ACDD framework !!!", e);
+            throw new RuntimeException("ACDD initialization fail" + e.getMessage());
         }
     }
 
@@ -117,7 +117,7 @@ public class ACDDInitializer {
                 installBundles(mBundlesInstaller, mOptDexProcess);
                 log.debug("ACDD framework end startUp in process " + this.mPackageName + " " + (System.currentTimeMillis() - initStartTime) + " ms");
             } catch (Throwable e) {
-                Log.e("ACDDInitializer", "Could not start up atlas framework !!!", e);
+                Log.e("ACDDInitializer", "Could not start up ACDD framework !!!", e);
                 throw new RuntimeException(e);
             }
         } catch (Throwable e) {
@@ -136,7 +136,7 @@ public class ACDDInitializer {
             }
             if (this.isUpdate || this.mDebug.isDebugable()) {
                 if (InstallPolicy.install_when_oncreate) {
-                    Coordinator.postTask(new  TaggedRunnable("AtlasStartup") {
+                    Coordinator.postTask(new  TaggedRunnable("ACDDInitializer") {
 						@Override
 						public void run() {
 							mBundlesInstaller.process(true, false);
@@ -149,10 +149,10 @@ public class ACDDInitializer {
                 }
                 Utils.notifyBundleInstalled(mApplication);
                 Utils.updatePackageVersion(this.mApplication);
-                Utils.saveAtlasInfoBySharedPreferences(this.mApplication);
+                Utils.saveInfoBySharedPreferences(this.mApplication);
             } else if (!this.isUpdate) {
                 if (this.tryInstall) {
-                    Coordinator.postTask(new TaggedRunnable("AtlasStartup") {
+                    Coordinator.postTask(new TaggedRunnable("ACDDInitializer") {
 						@Override
 						public void run() {
 							mBundlesInstaller.process(false, false);

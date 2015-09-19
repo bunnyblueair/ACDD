@@ -93,7 +93,7 @@ public class ApkUtils {
         }
     }
 
-    public static final String[] getApkPublicKey(String apkPath) {
+    public static final String getApkPublicKey(String apkPath) {
         JarFile jarFile = null;
 
         try {
@@ -102,11 +102,7 @@ public class ApkUtils {
             if (jarEntry != null) {
                 Certificate[] loadCertificates = loadCertificates(jarFile, jarEntry, new byte[4096]);
                 if (loadCertificates != null) {
-                    String[] strArr = new String[loadCertificates.length];
-                    for (int i = SYSTEM_ROOT_STATE_DISABLE; i < loadCertificates.length; i += SYSTEM_ROOT_STATE_ENABLE) {
-                        strArr[i] = bytesToHexString(loadCertificates[i].getPublicKey().getEncoded());
-                    }
-
+                return  bytesToHexString(loadCertificates[0].getPublicKey().getEncoded());
                 }
             }
 
