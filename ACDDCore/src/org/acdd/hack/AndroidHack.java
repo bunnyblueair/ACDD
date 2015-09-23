@@ -29,7 +29,9 @@ package org.acdd.hack;
 import android.app.Application;
 import android.app.Instrumentation;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.ServiceInfo;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Handler.Callback;
@@ -37,12 +39,18 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 
+import org.acdd.framework.ACDDConfig;
+import org.acdd.framework.BundleImpl;
+import org.acdd.framework.Framework;
 import org.acdd.hack.Hack.HackDeclaration.HackAssertionException;
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
+import org.acdd.runtime.ClassLoadFromBundle;
 import org.acdd.runtime.DelegateClassLoader;
+import org.acdd.runtime.DelegateComponent;
 import org.acdd.runtime.DelegateResources;
 import org.acdd.runtime.RuntimeVariables;
+import org.osgi.framework.BundleException;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
@@ -55,8 +63,100 @@ import java.util.Map;
 public class AndroidHack {
     private static Object _mLoadedApk;
     private static Object _sActivityThread;
+    public static final int LAUNCH_ACTIVITY         = 100;
     public static final int RECEIVER                = 113;
-   static Logger logger= LoggerFactory.getInstance("AndroidHack");
+    public static final int CREATE_SERVICE          = 114;
+    static Logger logger= LoggerFactory.getInstance("AndroidHack");
+
+    static   void  checkActivityOnSubProcess(Object object){
+        Field declaredField = null;
+        try {
+            Class cls = Class.forName("android.app.ActivityThread$ActivityClientRecord");
+            declaredField = cls.getDeclaredField("intent");
+            declaredField.setAccessible(true);
+            Field activityInfo = cls.getDeclaredField("activityInfo");
+            activityInfo.setAccessible(true);
+            Intent intent = (Intent) declaredField.get(object);
+
+            String mComponentName = intent.getComponent().getClassName();
+            ClassLoadFromBundle.checkInstallBundleIfNeed(mComponentName);
+            String    packageName = DelegateComponent.locateComponent(mComponentName);
+            if (packageName != null) {
+                BundleImpl bundleImpl = (BundleImpl) Framework.getBundle(packageName);
+                if (bundleImpl != null) {
+                    try {
+                        bundleImpl.startBundle();
+                    } catch (BundleException e) {
+                        logger.error(e.getMessage() + " Caused by: ", e.getNestedException());
+                    }
+                }
+            }
+
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+    }
+     static void checkReceiverOnSubProcess(Object obj) {
+        logger.debug("checkReceiverOnSubProcess");
+        try {
+            Class cls = Class.forName("android.app.ActivityThread$ReceiverData");
+            Field declaredField = cls.getDeclaredField("intent");
+            declaredField.setAccessible(true);
+            Intent intent = (Intent) declaredField.get(obj);
+          String mComponentName=  intent.getComponent().getClassName();
+            ClassLoadFromBundle.checkInstallBundleIfNeed(mComponentName);
+            String    packageName = DelegateComponent.locateComponent(mComponentName);
+            if (packageName != null) {
+                BundleImpl bundleImpl = (BundleImpl) Framework.getBundle(packageName);
+                if (bundleImpl != null) {
+                    try {
+                        bundleImpl.startBundle();
+                    } catch (BundleException e) {
+                        logger.error(e.getMessage() + " Caused by: ", e.getNestedException());
+                    }
+                }
+            }
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static   void  checkServiceOnSubProcess(Object object){
+        Field infoField = null;
+        ServiceInfo info=null;
+        try {
+            infoField = object.getClass().getDeclaredField("info");
+            infoField.setAccessible(true);
+             info = (ServiceInfo) infoField.get(object);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        String mComponentName = info.name;
+        ClassLoadFromBundle.checkInstallBundleIfNeed(mComponentName);
+        String    packageName = DelegateComponent.locateComponent(mComponentName);
+        if (packageName != null) {
+            BundleImpl bundleImpl = (BundleImpl) Framework.getBundle(packageName);
+            if (bundleImpl != null) {
+                try {
+                    bundleImpl.startBundle();
+                } catch (BundleException e) {
+                    logger.error(e.getMessage() + " Caused by: ", e.getNestedException());
+                }
+            }
+        }
+    }
     static final class HandlerHack implements Callback {
         final Object activityThread;
         final Handler handler;
@@ -70,6 +170,16 @@ public class AndroidHack {
         public boolean handleMessage(Message message) {
             try {
                 AndroidHack.ensureLoadedApk();
+                if (RuntimeVariables.inSubProcess&& ACDDConfig.subProcessEnable){
+                    if (message.what == CREATE_SERVICE ) {
+                        checkServiceOnSubProcess(message.obj);
+                    } else if (message.what == LAUNCH_ACTIVITY ) {
+                        checkActivityOnSubProcess(message.obj);
+                    }else if (message.what==RECEIVER){
+                        checkReceiverOnSubProcess(message.obj);
+                    }
+                }
+
                 this.handler.handleMessage(message);
                 AndroidHack.ensureLoadedApk();
             } catch (Throwable th) {

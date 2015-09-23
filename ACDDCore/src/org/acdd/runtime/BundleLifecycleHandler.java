@@ -34,12 +34,10 @@ import android.os.Looper;
 
 import org.acdd.framework.BundleImpl;
 import org.acdd.framework.Framework;
-import org.acdd.framework.InternalConstant;
 import org.acdd.hack.ACDDHacks;
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
 import org.acdd.util.StringUtils;
-
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.ServicePermission;
@@ -129,54 +127,21 @@ public class BundleLifecycleHandler implements SynchronousBundleListener {
     }
 
     private void installed(Bundle bundle) {
+        log.debug("installed "+bundle.getLocation());
     }
 
     private void updated(Bundle bundle) {
+        log.debug("updated "+bundle.getLocation());
     }
 
     private void uninstalled(Bundle bundle) {
+        log.debug("uninstalled "+bundle.getLocation());
         DelegateComponent.removePackage(bundle.getLocation());
     }
 
     private void started(Bundle bundle) {
         BundleImpl bundleImpl = (BundleImpl) bundle;
         long currentTimeMillis = System.currentTimeMillis();
-        if (InternalConstant.CODE_ENABLE_COMPILE) {//no used OSGI.MF any more,disable compile this code
-            String mBundleApplicationNames = bundleImpl.getHeaders().get("Bundle-Application");
-            if (StringUtils.isNotEmpty(mBundleApplicationNames)) {
-                String[] bundleApplications;
-                String[] split = StringUtils.split(mBundleApplicationNames, ",");
-                if (split == null || split.length == 0) {
-                    bundleApplications = new String[]{mBundleApplicationNames};
-                } else {
-                    bundleApplications = split;
-                }
-                if (bundleApplications != null) {
-                    for (String bundleApplication : bundleApplications) {
-                        String trim = StringUtils.trim(bundleApplication);
-                        if (StringUtils.isNotEmpty(trim)) {
-                            try {
-                                boolean needInit = true;
-                                for (Application initedApplication : DelegateComponent.apkApplications.values()) {
-                                    if (initedApplication.getClass().getName().equals(trim)) {
-                                        needInit = false;
-                                        break;
-                                    }
-                                }
-                                if (needInit) {
-                                    Application newApplication = newApplication(trim, bundleImpl.getClassLoader());
-                                    newApplication.onCreate();
-                                    DelegateComponent.apkApplications.put("system:" + trim, newApplication);
-                                }
-                            } catch (Throwable th) {
-                                log.error("Error to start application", th);
-                            }
-                        }
-                    }
-                }
-                return;
-            }
-        }
         {
             PackageLite packageLite = DelegateComponent.getPackage(bundleImpl.getLocation());
             if (packageLite != null) {

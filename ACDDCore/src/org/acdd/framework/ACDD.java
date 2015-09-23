@@ -31,12 +31,12 @@ import android.content.ComponentName;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 
-import org.acdd.hack.AndroidHack;
 import org.acdd.hack.ACDDHacks;
+import org.acdd.hack.AndroidHack;
+import org.acdd.log.ACDDLog;
 import org.acdd.log.ILog;
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
-import org.acdd.log.ACDDLog;
 import org.acdd.runtime.BundleLifecycleHandler;
 import org.acdd.runtime.ClassLoadFromBundle;
 import org.acdd.runtime.ClassNotFoundInterceptorCallback;
@@ -46,7 +46,7 @@ import org.acdd.runtime.FrameworkLifecycleHandler;
 import org.acdd.runtime.InstrumentationHook;
 import org.acdd.runtime.PackageLite;
 import org.acdd.runtime.RuntimeVariables;
-
+import org.acdd.util.ACDDUtils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.BundleListener;
@@ -94,13 +94,14 @@ public class ACDD {
         RuntimeVariables.androidApplication = application;
         AndroidHack.injectClassLoader(packageName, delegateClassLoader);
         AndroidHack.injectInstrumentationHook(new InstrumentationHook(AndroidHack
-                        .getInstrumentation(), application.getBaseContext()));
+                .getInstrumentation(), application.getBaseContext()));
         injectApplication(application, packageName);
         this.bundleLifecycleHandler = new BundleLifecycleHandler();
         Framework.syncBundleListeners.add(this.bundleLifecycleHandler);
         this.frameworkLifecycleHandler = new FrameworkLifecycleHandler();
         Framework.frameworkListeners.add(this.frameworkLifecycleHandler);
         AndroidHack.hackH();
+        RuntimeVariables.inSubProcess=!application.getPackageName().equals(ACDDUtils.getProcessNameByPID(android.os.Process.myPid()));
         // Framework.initialize(properties);
     }
 

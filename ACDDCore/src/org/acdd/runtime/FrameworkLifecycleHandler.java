@@ -26,15 +26,8 @@
  */
 package org.acdd.runtime;
 
-import android.app.Application;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Bundle;
-
-import org.acdd.framework.Framework;
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
-import org.acdd.util.StringUtils;
-
 import org.osgi.framework.FrameworkEvent;
 import org.osgi.framework.FrameworkListener;
 
@@ -66,35 +59,9 @@ public class FrameworkLifecycleHandler implements FrameworkListener {
      * application format "app1,app2" and so on
      **/
     private void starting() {
-        Bundle bundle;
+
         long currentTimeMillis = System.currentTimeMillis();
-        try {
-            bundle = RuntimeVariables.androidApplication.getPackageManager().getApplicationInfo(RuntimeVariables.androidApplication.getPackageName(), 128).metaData;
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-            bundle = null;
-        }
-        if (bundle != null) {
-            String string = bundle.getString("application");
-            if (StringUtils.isNotEmpty(string)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Found extra application: " + string);
-                }
-                String[] split = StringUtils.split(string, ",");
-                if (split == null || split.length == 0) {
-                    split = new String[]{string};
-                }
-                for (String extraApplication : split) {
-                    try {
-                        Application newApplication = BundleLifecycleHandler.newApplication(extraApplication, Framework.getSystemClassLoader());
-                        newApplication.onCreate();
-                        DelegateComponent.apkApplications.put("system:" + extraApplication, newApplication);
-                    } catch (Throwable e) {
-                        log.error("Error to start application", e);
-                    }
-                }
-            }
-        }
+
         log.info("starting() spend " + (System.currentTimeMillis() - currentTimeMillis) + " milliseconds");
     }
 

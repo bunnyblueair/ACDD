@@ -34,12 +34,13 @@ import android.util.Log;
 
 import org.acdd.android.task.Coordinator;
 import org.acdd.android.task.Coordinator.TaggedRunnable;
+import org.acdd.bundleInfo.BundleInfoList;
 import org.acdd.framework.ACDD;
 import org.acdd.framework.InternalConstant;
-import org.acdd.runtime.Globals;
-import org.acdd.bundleInfo.BundleInfoList;
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
+import org.acdd.runtime.Globals;
+import org.acdd.runtime.RuntimeVariables;
 import org.acdd.util.ApkUtils;
 
 import java.util.Properties;
@@ -114,7 +115,11 @@ public class ACDDInitializer {
 
             try {
                 ACDD.getInstance().startup(this.mProperties);
-                installBundles(mBundlesInstaller, mOptDexProcess);
+                if (RuntimeVariables.inSubProcess) { //if application in  sub-process,skip reinsall plugins,just restore  profile
+                    Utils.notifyBundleInstalled(mApplication);
+                } else {
+                    installBundles(mBundlesInstaller, mOptDexProcess);
+                }
                 log.debug("ACDD framework end startUp in process " + this.mPackageName + " " + (System.currentTimeMillis() - initStartTime) + " ms");
             } catch (Throwable e) {
                 Log.e("ACDDInitializer", "Could not start up ACDD framework !!!", e);

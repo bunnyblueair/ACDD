@@ -89,7 +89,14 @@
         <activity
             android:name="com.acdd.qrcode.MainActivity"
             android:label="@string/app_name"
+
             android:theme="@style/QrTheme"></activity>
+        <service
+            android:name="com.acdd.qrcode.QRService"
+            android:enabled="true"
+
+            android:exported="true" >
+        </service>
         <activity
             android:name="com.acdd.qrcode.CaptureActivity"
             android:configChanges="orientation|keyboardHidden"

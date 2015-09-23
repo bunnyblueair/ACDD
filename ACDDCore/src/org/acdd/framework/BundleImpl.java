@@ -131,7 +131,7 @@ public final class BundleImpl implements Bundle {
             this.archive = new BundleArchive(this.location, file);
             resolveBundle(false);
             Framework.bundles.put(this.location, this);
-            Framework.notifyBundleListeners(1, this);
+            Framework.notifyBundleListeners(BundleEvent.INSTALLED, this);
             if (Framework.DEBUG_BUNDLES && log.isInfoEnabled()) {
                 log.info("Framework: Bundle " + toString() + " loaded. " + (System.currentTimeMillis() - currentTimeMillis) + " ms");
             }

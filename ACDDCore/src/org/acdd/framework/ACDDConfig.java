@@ -40,5 +40,7 @@ public class ACDDConfig {
     public static String PRELOAD_DIR = "armeabi";
     /**enable opt dex on ART ****/
     public static boolean  optART=true;
+    /******enable sub process******/
+    public static boolean  subProcessEnable=false;
 
 }
