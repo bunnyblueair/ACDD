@@ -40,4 +40,4 @@ also you can define package change packageName "com.myapp.pkgname" to " com.myap
  [![License](https://img.shields.io/badge/License-MIT%20License-brightgreen.svg)]()<br>
 The MIT License (MIT) Copyright (c) 2015 Bunny Blue,achellies
 
-# Feature https://github.com/bunnyblue/ACDD/wiki#feature
+# [Feature @ Wiki](https://github.com/bunnyblue/ACDD/wiki#feature)
