@@ -52,4 +52,4 @@ versionName:"1.0.1"
  [![License](https://img.shields.io/badge/License-MIT%20License-brightgreen.svg)]()<br>
 The MIT License (MIT) Copyright (c) 2015 Bunny Blue,achellies
 
-
+# [功能详情 @ Wiki](https://github.com/bunnyblue/ACDD/wiki#feature-zh)
