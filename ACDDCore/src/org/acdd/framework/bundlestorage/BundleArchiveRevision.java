@@ -32,6 +32,7 @@ import android.text.TextUtils;
 
 import org.acdd.bundleInfo.BundleInfoList;
 import org.acdd.dexopt.InitExecutor;
+import org.acdd.framework.ACDDConfig;
 import org.acdd.framework.Framework;
 import org.acdd.hack.ACDDHacks;
 import org.acdd.log.Logger;
@@ -507,4 +508,11 @@ public class BundleArchiveRevision {
             this.zipFile = new ZipFile(this.bundleFile, 1);
         }
     }
+    public boolean isUpdated() {
+        if (ACDDConfig.stubModeEnable){
+            return true;
+        }
+        return false;
+    }
+
 }

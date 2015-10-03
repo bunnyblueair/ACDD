@@ -28,7 +28,11 @@ package org.acdd.framework;
 
 import android.app.Application;
 import android.content.ComponentName;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.content.pm.ServiceInfo;
 import android.content.res.Resources;
 
 import org.acdd.hack.ACDDHacks;
@@ -46,6 +50,7 @@ import org.acdd.runtime.FrameworkLifecycleHandler;
 import org.acdd.runtime.InstrumentationHook;
 import org.acdd.runtime.PackageLite;
 import org.acdd.runtime.RuntimeVariables;
+import org.acdd.runtime.stub.BundlePackageManager;
 import org.acdd.util.ACDDUtils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
@@ -323,5 +328,25 @@ public class ACDD {
             ClassNotFoundInterceptorCallback classNotFoundInterceptorCallback) {
         Framework.setClassNotFoundCallback(classNotFoundInterceptorCallback);
     }
+    //start stub mode
+    public List<ResolveInfo> queryNewIntentActivities(Intent intent, String str, int flags, int userid) {
 
+        return BundlePackageManager.queryIntentActivities(intent, str, flags, userid);
+    }
+
+    public List<ResolveInfo> queryNewIntentServices(Intent intent, String str, int flags, int userid) {
+
+        return BundlePackageManager.queryIntentService(intent, str, flags, userid);
+    }
+
+    public ActivityInfo getNewActivityInfo(ComponentName componentName, int flags) {
+
+        return BundlePackageManager.getNewActivityInfo(componentName, flags);
+    }
+
+    public ServiceInfo getNewServiceInfo(ComponentName componentName, int flags) {
+
+        return BundlePackageManager.getNewServiceInfo(componentName, flags);
+    }
+    //end stub mode
 }

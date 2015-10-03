@@ -92,7 +92,7 @@ public class Globals {
     }
 
     public static void initInstalledVersionName(String InstalledVersionName) {
-        if (sInstalledVersionName != null)
+        if (sInstalledVersionName == null)
             sInstalledVersionName = InstalledVersionName;
 
     }

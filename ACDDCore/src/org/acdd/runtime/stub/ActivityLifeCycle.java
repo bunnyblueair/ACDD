@@ -1,6 +1,6 @@
 /*
  * ACDD Project
- * file Stub.java  is  part of ACCD
+ * file ActivityLifeCycle.java  is  part of ACCD
  * The MIT License (MIT)  Copyright (c) 2015 Bunny Blue,achellies.
  *
  *
@@ -27,8 +27,53 @@
 
 package org.acdd.runtime.stub;
 
+import android.app.Activity;
+import android.app.Application;
+import android.os.Bundle;
+
 /**
- * Created by BunnyBlue on 9/15/15.
+ * Created by BunnyBlue on 10/3/15.
  */
-public class Stub {
+
+public class ActivityLifeCycle implements Application.ActivityLifecycleCallbacks {
+    public ActivityLifeCycle() {
+
+    }
+
+    @Override
+    public void onActivityCreated(Activity activity, Bundle bundle) {
+
+        ActivityStackMgr.getInstance().pushToActivityStack(activity);
+    }
+
+    @Override
+    public void onActivityStarted(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivityResumed(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivityPaused(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivityStopped(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onActivityDestroyed(Activity activity) {
+
+        ActivityStackMgr.getInstance().popFromActivityStack(activity);
+    }
 }

@@ -30,28 +30,13 @@
     package="org.acdd.sdk"
     android:versionCode="1"
     android:versionName="1.0" >
-
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="21" />
 
-    <application
-  
-     >
-
-
-        <!-- Widget -->
-<!--         <receiver android:name="com.nostra13.universalimageloader.sample.widget.UILWidgetProvider" >
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_provider" />
-
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-        </receiver> -->
-        
-        
+    <application>
+        <activity android:name="org.acdd.runtime.stub.StubActivity" />
+        <receiver android:name="org.acdd.runtime.stub.StubReceiver"/>
     </application>
 
 </manifest>

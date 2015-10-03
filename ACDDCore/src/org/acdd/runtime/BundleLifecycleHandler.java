@@ -28,20 +28,26 @@ package org.acdd.runtime;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.pm.ProviderInfo;
 import android.os.AsyncTask;
 import android.os.Build.VERSION;
 import android.os.Looper;
 
 import org.acdd.framework.BundleImpl;
 import org.acdd.framework.Framework;
+import org.acdd.framework.InternalConstant;
 import org.acdd.hack.ACDDHacks;
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
+import org.acdd.runtime.stub.ProviderInstaller;
 import org.acdd.util.StringUtils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.ServicePermission;
 import org.osgi.framework.SynchronousBundleListener;
+
+import java.util.Collection;
+
 /***This is ACDD framework  lifecycle  handle,mange  bundle  lifecycles**/
 public class BundleLifecycleHandler implements SynchronousBundleListener {
     static final Logger log;
@@ -143,6 +149,14 @@ public class BundleLifecycleHandler implements SynchronousBundleListener {
         BundleImpl bundleImpl = (BundleImpl) bundle;
         long currentTimeMillis = System.currentTimeMillis();
         {
+            if (InternalConstant.STUB_PROVIDER)
+            {
+                Collection<ProviderInfo> providerInfos= bundleImpl.getPackageManager().providerIntentResolver.getProviders();
+                if (!providerInfos.isEmpty()){
+                    log.debug("install providers "+providerInfos.size());
+                    ProviderInstaller.installContentProviders(RuntimeVariables.androidApplication, providerInfos);
+                }
+            }
             PackageLite packageLite = DelegateComponent.getPackage(bundleImpl.getLocation());
             if (packageLite != null) {
                 String applicationClassName = packageLite.applicationClassName;

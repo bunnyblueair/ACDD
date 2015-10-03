@@ -26,8 +26,10 @@
  */
 package org.acdd.runtime;
 
+import org.acdd.framework.ACDDConfig;
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
+import org.acdd.runtime.stub.ActivityLifeCycle;
 import org.osgi.framework.FrameworkEvent;
 import org.osgi.framework.FrameworkListener;
 
@@ -74,6 +76,11 @@ public class FrameworkLifecycleHandler implements FrameworkListener {
             DelegateResources.newDelegateResources(RuntimeVariables.androidApplication, RuntimeVariables.delegateResources, null);
         } catch (Throwable e) {
             log.error("Failed to newDelegateResources", e);
+        }
+        if (ACDDConfig.stubModeEnable)
+        {
+            RuntimeVariables.androidApplication.registerActivityLifecycleCallbacks(new ActivityLifeCycle());
+
         }
         log.info("started() spend " + (System.currentTimeMillis() - currentTimeMillis) + " milliseconds");
     }

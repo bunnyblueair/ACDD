@@ -50,6 +50,7 @@ import org.acdd.runtime.DelegateClassLoader;
 import org.acdd.runtime.DelegateComponent;
 import org.acdd.runtime.DelegateResources;
 import org.acdd.runtime.RuntimeVariables;
+import org.acdd.runtime.stub.BundlePackageManager;
 import org.osgi.framework.BundleException;
 
 import java.lang.ref.WeakReference;
@@ -179,6 +180,15 @@ public class AndroidHack {
                         checkReceiverOnSubProcess(message.obj);
                     }
                 }
+                if (ACDDConfig.stubModeEnable) {
+                    if (message.what == LAUNCH_ACTIVITY) {//activity
+                        BundlePackageManager.processActivityIntentIfNeed(message.obj);
+                    } else if (message.what == RECEIVER) {
+
+                        BundlePackageManager.processReceiverIntentIfNeed(message.obj);
+                    }
+                }
+
 
                 this.handler.handleMessage(message);
                 AndroidHack.ensureLoadedApk();

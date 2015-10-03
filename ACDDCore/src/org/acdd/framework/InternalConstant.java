@@ -58,5 +58,13 @@ public class InternalConstant {
     public static Class<?> BundleNotFoundActivity = null;
     /********disable compile code****/
     public  static  final  boolean CODE_ENABLE_COMPILE=false;
+    public  static  final  boolean   STUB_PROVIDER=false;
+    public  static  final String STUB_BUNDLE_LOCATION="accd_stub1";
+    public  static  final String STUB_TARGET="accd_stub2";
+    public  static  final String STUB_CHECKED="accd_stub3";
+    public  static  final String STUB_DATA="accd_stub4";
+    public  static  final String STUB_STUB_ACTIVITY="org.acdd.runtime.stub.StubActivity";
+    public  static  final String STUB_STUB_RECEIVER="org.acdd.runtime.stub.StubReceiver";
+
 
 }

@@ -30,7 +30,8 @@ import org.acdd.framework.bundlestorage.Archive;
 import org.acdd.framework.bundlestorage.BundleArchive;
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
-
+import org.acdd.runtime.RuntimeVariables;
+import org.acdd.runtime.stub.BundlePackageManager;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleException;
@@ -45,6 +46,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.security.ProtectionDomain;
 import java.util.Dictionary;
@@ -60,7 +62,7 @@ public final class BundleImpl implements Bundle {
     Archive archive;
     final File bundleDir;
     BundleClassLoader classloader;
-
+    BundlePackageManager packageManager = null;
     int currentStartlevel;
     ProtectionDomain domain;
     Hashtable<String, String> headers = new Hashtable<String, String>();
@@ -417,6 +419,21 @@ public final class BundleImpl implements Bundle {
     @Override
     public String toString() {
         return this.location;
+    }
+    public synchronized BundlePackageManager getPackageManager() {
+        if (this.packageManager == null) {
+            try {
+                this.packageManager = BundlePackageManager.parseBundle(RuntimeVariables.androidApplication, this);
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+        return this.packageManager;
+    }
+
+    public boolean isUpdated() {
+
+        return getArchive().isUpdated();
     }
 
 

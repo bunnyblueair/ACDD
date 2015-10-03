@@ -49,21 +49,22 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
-import org.acdd.framework.InternalConstant;
 import org.acdd.bundleInfo.BundleInfoList;
+import org.acdd.framework.ACDDConfig;
 import org.acdd.framework.BundleClassLoader;
 import org.acdd.framework.BundleImpl;
 import org.acdd.framework.Framework;
+import org.acdd.framework.InternalConstant;
+import org.acdd.hack.ACDDHacks;
 import org.acdd.hack.Hack;
 import org.acdd.hack.Hack.HackDeclaration.HackAssertionException;
 import org.acdd.hack.Hack.HackedClass;
 import org.acdd.hack.Hack.HackedMethod;
-import org.acdd.hack.ACDDHacks;
+import org.acdd.log.ACDDMonitor;
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
-import org.acdd.log.ACDDMonitor;
+import org.acdd.runtime.stub.BundlePackageManager;
 import org.acdd.util.StringUtils;
-
 import org.osgi.framework.BundleException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -91,7 +92,7 @@ public class InstrumentationHook extends Instrumentation {
         final Context who;
 
         ExecStartActivityCallbackImpl(Context who, IBinder contextThread, IBinder token, Activity target, Intent intent, int requestCode) {
-            this.who = context;
+            this.who = who;
             this.contextThread = contextThread;
             this.token = token;
             this.target = target;
@@ -104,6 +105,11 @@ public class InstrumentationHook extends Instrumentation {
             if (mExecStartActivity == null) {
                 throw new NullPointerException("could not hook Instrumentation!");
             }
+            if (ACDDConfig.stubModeEnable) {
+
+                BundlePackageManager.modifyStubActivity(intent);
+            }
+
             try {
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                     return (ActivityResult) mExecStartActivity.invoke(mBase, this.who, this.contextThread, this.token,
@@ -147,6 +153,9 @@ public class InstrumentationHook extends Instrumentation {
             if (mExecStartActivity == null) {
                 throw new NullPointerException("could not hook Instrumentation!");
             }
+            if (ACDDConfig.stubModeEnable) {
+                BundlePackageManager.modifyStubActivity(intent);
+            }
             try {
                 return (ActivityResult) mExecStartActivity.invoke(mBase, this.who, this.contextThread, this.token,
                         this.target, this.intent, this.requestCode, this.options);
@@ -180,6 +189,9 @@ public class InstrumentationHook extends Instrumentation {
         public ActivityResult execStartActivity() {
             if (mExecStartActivityFragment == null) {
                 throw new NullPointerException("could not hook Instrumentation!");
+            }
+            if (ACDDConfig.stubModeEnable) {
+                BundlePackageManager.modifyStubActivity(intent);
             }
             try {
                 return (ActivityResult) mExecStartActivityFragment.invoke(mBase, this.who, this.contextThread, this.token,
@@ -218,6 +230,9 @@ public class InstrumentationHook extends Instrumentation {
         public ActivityResult execStartActivity() {
             if (mExecStartActivityFragment == null) {
                 throw new NullPointerException("could not hook Instrumentation!");
+            }
+            if (ACDDConfig.stubModeEnable) {
+                BundlePackageManager.modifyStubActivity(intent);
             }
 
             try {

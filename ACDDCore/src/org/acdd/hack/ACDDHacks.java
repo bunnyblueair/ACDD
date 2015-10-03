@@ -31,6 +31,7 @@ import android.app.Instrumentation;
 import android.app.Service;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.pm.ApplicationInfo;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.content.res.Resources.Theme;
@@ -135,6 +136,26 @@ public class ACDDHacks extends HackDeclaration implements
     public static HackedClass<Resources> Resources;
     public static HackedField<Resources, Object> Resources_mAssets;
     public static HackedClass<Service> Service;
+    //support stub mode
+    public static HackedClass<Object> PackageParser;
+    public static HackedClass<Object> PackageParser$Activity;
+    public static HackedClass<Object> PackageParser$Provider;
+    public static HackedClass<Object> PackageParser$ActivityIntentInfo;
+    public static HackedField<Object, Object> PackageParser$ActivityIntentInfo_activity;
+    public static HackedField<Object, ArrayList<Object>> PackageParser$Activity_intents;
+    public static HackedClass<Object> PackageParser$Component;
+    public static HackedMethod PackageParser$Component_getComponentName;
+    public static HackedClass<Object> PackageParser$Package;
+    public static HackedField<Object, ArrayList<Object>> PackageParser$Package_activities;
+    public static HackedField<Object, ApplicationInfo> PackageParser$Package_applicationInfo;
+    public static HackedField<Object, String> PackageParser$Package_packageName;
+    public static HackedField<Object, ArrayList<Object>> PackageParser$Package_receivers;
+    public static HackedField<Object, ArrayList<Object>> PackageParser$Package_services;
+    public static HackedField<Object, ArrayList<Object>> PackageParser$Package_providers;
+    public static Hack.HackedConstructor PackageParser_constructor;
+    public static HackedMethod PackageParser_generatePackageInfo;
+    public static HackedMethod PackageParser_parsePackage;
+    //end support stub mode
     protected static final Logger log;
     public static boolean sIsIgnoreFailure;
     public static boolean sIsReflectAvailable;
@@ -210,6 +231,12 @@ public class ACDDHacks extends HackDeclaration implements
         ClassLoader = Hack.into(ClassLoader.class);
         DexClassLoader = Hack.into(DexClassLoader.class);
         LexFile = Hack.into("dalvik.system.LexFile");
+        PackageParser$Component = Hack.into("android.content.pm.PackageParser$Component");
+        PackageParser$Activity = Hack.into("android.content.pm.PackageParser$Activity");
+        PackageParser$Provider=Hack.into("android.content.pm.PackageParser$Provider");
+        PackageParser = Hack.into("android.content.pm.PackageParser");
+        PackageParser$Package = Hack.into("android.content.pm.PackageParser$Package");
+        PackageParser$ActivityIntentInfo = Hack.into("android.content.pm.PackageParser$ActivityIntentInfo");
         sIsIgnoreFailure = false;
     }
 
@@ -260,6 +287,14 @@ public class ACDDHacks extends HackDeclaration implements
         ContextWrapper_mBase = ContextWrapper.field("mBase").ofType(
                 Context.class);
         Resources_mAssets = Resources.field("mAssets");
+        PackageParser$Activity_intents = PackageParser$Component.field("intents").ofGenericType(ArrayList.class);
+        PackageParser$Package_activities = PackageParser$Package.field("activities").ofGenericType(ArrayList.class);
+        PackageParser$Package_services = PackageParser$Package.field("services").ofGenericType(ArrayList.class);
+        PackageParser$Package_providers=PackageParser$Package.field("providers").ofGenericType(ArrayList.class);
+        PackageParser$Package_receivers = PackageParser$Package.field("receivers").ofGenericType(ArrayList.class);
+        PackageParser$Package_applicationInfo = PackageParser$Package.field("applicationInfo").ofType(ApplicationInfo.class);
+        PackageParser$Package_packageName = PackageParser$Package.field("packageName").ofGenericType(String.class);
+        PackageParser$ActivityIntentInfo_activity = PackageParser$ActivityIntentInfo.field("activity").ofType(PackageParser$Activity.getmClass());
     }
 
     /***
@@ -282,9 +317,16 @@ public class ACDDHacks extends HackDeclaration implements
             DexClassLoader_findClass = DexClassLoader.method("findClass",
                     String.class);
         }
+        PackageParser$Component_getComponentName = PackageParser$Component.method("getComponentName", new Class[0]);
     }
 
     private static void allConstructors() throws HackAssertionException {
+        if (VERSION.SDK_INT <= 20) {
+            PackageParser_constructor = PackageParser.constructor(String.class);
+            return;
+        }
+        PackageParser_constructor = PackageParser.constructor(new Class[0]);
+
     }
 
     @Override
@@ -292,7 +334,7 @@ public class ACDDHacks extends HackDeclaration implements
         if (!sIsIgnoreFailure) {
             if (this.mExceptionArray == null) {
                 this.mExceptionArray = new AssertionArrayException(
-                        "atlas hack assert failed");
+                        "acdd hack assert failed");
             }
             this.mExceptionArray.addException(hackAssertionException);
         }

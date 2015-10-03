@@ -254,6 +254,11 @@ public class BundleArchive implements Archive {
     @Override
     public void close() {
     }
+    @Override
+    public boolean isUpdated() {
+        return this.currentRevision.isUpdated();
+
+    }
 
     /**
      * @version start  from 1.0.0

@@ -135,4 +135,5 @@ public interface Archive {
      * remove bundle cache
      ***/
     void purge() throws Exception;
+    boolean isUpdated();
 }
