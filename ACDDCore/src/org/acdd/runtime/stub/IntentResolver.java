@@ -46,7 +46,7 @@ import java.util.Set;
 
 
 /**
- * {@hide}
+ * 
  */
 public abstract class IntentResolver<F extends IntentFilter, R extends Object> {
     final private static String TAG = "IntentResolver";

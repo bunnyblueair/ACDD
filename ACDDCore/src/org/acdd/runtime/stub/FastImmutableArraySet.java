@@ -36,7 +36,7 @@ import java.util.Iterator;
  * Iterating over an array in this fashion is 2.5x faster than iterating over a  HashSet
  * so it is worth copying the contents of the set to an array when iterating over it
  * hundreds of times.
- * @hide
+ * 
  */
 public final class FastImmutableArraySet<T> extends AbstractSet<T> {
     FastIterator<T> mIterator;
