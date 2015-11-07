@@ -10,7 +10,7 @@ ACDDCore Android动态部署框架（你可以认为是插件，但又与插件�
 
 
 
-  <br>代码遵循MIT License，Android动态部署框架，与通过代理方式实现的插件区别很大，用过代理的应该知道，代理方式会有各种莫名其妙的问题，有bug的话可以在issue里面提交。</br>
+  <br>代码遵循MIT License，Android动态部署框架,Activity 、Receiver支持stub模式，有bug的话可以在issue里面提交。</br>
 
 ### ，示例以及编译工具已经移动到 https://github.com/bunnyblue/ACDDExtension
 
@@ -20,26 +20,35 @@ ACDDCore Android动态部署框架（你可以认为是插件，但又与插件�
 [BunnyBlue](https://github.com/bunnyblue)<br>
 
 ## plugin start
-从ACDDExt下载aapt，建议使用build-tool 22版本，21不在维护，后面的小版本无所谓，主版本是22
+从ACDDExt下载aapt，不再支持eclipse，build-tool为23
 编写动态部署的组件跟开发普通App没区别，只不过最后编译的时候需要注意资源分区.
 ### 组件资源注意事项
-在gradle1.3之前的版本，通过aapt修改参数不太好处理，aapt修改的时候gradle插件1.3还没出来。
-对于资源分区使用versionName做了个中转，这样把资源的Package-id传给aapt,当然现在方案很多了，后面重构，现在先这样。
-比如说原来你这样写
+```gradle 
+//脚本配置，编译acdd产生插件包，public为宿主的定义，详情可以参照https://android.googlesource.com/platform/frameworks/base/+/c8834722d5591d1381dc199f04a544a6b11b74bd/core/res/res/values/public.xml
+//要注意的是 5.0之后androidfw资源查找逻辑修改了，如果插件需要新的theme在宿主里面定义，然后xml直接引用
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+    defaultConfig {
+        applicationId "com.acdd.testapp2"
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+
+    productFlavors {
+        acdd {
+            aaptOptions.additionalParameters '--ACDD-resoure-id', '0x5e', '--ACDD-shared-resources', rootProject.file("public.xml").getAbsolutePath()
+        }
+        normal {
+        }
+    }
+}
+```
 
 宿主的0x7f这个一般不动。0x10到0x7e的都可以用，当然，0x0这一块的最好不要动,0x00是共享资源，跟你没啥关系基本上，0x01是Android系统资源， 0x02是WebView资源(Android 5.0新增)
 
-```
-versionName:"1.0.1"
-
-```
-现在versionName应该把package-id的十六进制附加在versionName后面，注意十六进制要小写
-
-```
-"1.0.10x7a"
-
-```
-那versionName不就变了吗？没，aapt在编译时候会去掉你添加的后4位。编译出来还是1.0.1
 
 ##Demo Apk & Gif演示动画
 <a href="https://github.com/bunnyblue/ACDDExtension/blob/master/Dist/ACDDLauncher.apk">
