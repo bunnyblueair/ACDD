@@ -24,9 +24,8 @@
 <h1>
 <a id="acddcore--non-proxy--android-dynamic-deployment-framework" class="anchor" href="#acddcore--non-proxy--android-dynamic-deployment-framework" aria-hidden="true"><span class="octicon octicon-link"></span></a>ACDDCore  non-Proxy  Android Dynamic Deployment Framework</h1>
 
-<p><img src="https://raw.githubusercontent.com/bunnyblue/ACDD/master/art/ACDD_logo.png" alt="Logo"></p>
-
-<p><a href="https://android-arsenal.com/details/1/2056"><img src="https://img.shields.io/badge/Android%20Arsenal-Android%20ACDD-brightgreen.svg?style=flat" alt="Android Arsenal"></a><br>
+<p><img src="art/ACDD_logo_full.png" alt=""><br>
+ <a href="https://android-arsenal.com/details/1/2056"><img src="https://img.shields.io/badge/Android%20Arsenal-Android%20ACDD-brightgreen.svg?style=flat" alt="Android Arsenal"></a><br>
 <a href="https://gitter.im/bunnyblue/ACDD?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/bunnyblue/ACDD"></a><br>
  Build Status <a href="https://travis-ci.org/bunnyblue/ACDD"><img src="https://travis-ci.org/bunnyblue/ACDD.svg?branch=master" alt="Build Status"></a></p>
 
@@ -53,14 +52,25 @@
 <h2>
 <a id="plugin-start" class="anchor" href="#plugin-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>plugin start</h2>
 
-<p>download aapt from repo,and  you should use build-tool version 22.x.x,
+<p>download aapt from repo,and  you should use build-tool version 23.x.x,
 write your plugin as normal app, ant build  with  hacked aapt.</p>
 
 <h3>
 <a id="plugin-resource-notice" class="anchor" href="#plugin-resource-notice" aria-hidden="true"><span class="octicon octicon-link"></span></a>plugin resource notice</h3>
 
-<p>you can define your package id at Manifest by "versionName",such as versionName:"1.0.1" ,but as a plugin should be versionName:"1.0.10x7a",you will get apk which versionName is "1.0.0" but package id is 0x7a not 0x7f.you can use 0x2 to 0x7,
-also you can define package change packageName "com.myapp.pkgname" to " com.myapp.pkgname0x7a".</p>
+<pre><code>android {//you need use buildToolsVersion 23.x gradle plugin 1.3.+
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    productFlavors {
+        acdd {
+            aaptOptions.additionalParameters '--ACDD-resoure-id', '0x5e', '--ACDD-shared-resources', rootProject.file("public.xml").getAbsolutePath()
+        }
+        normal {
+        }
+    }
+}
+</code></pre>
 
 <h2>
 <a id="sample--art" class="anchor" href="#sample--art" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sample &amp; Art</h2>
@@ -77,23 +87,9 @@ also you can define package change packageName "com.myapp.pkgname" to " com.myap
 <p><a href=""><img src="https://img.shields.io/badge/License-MIT%20License-brightgreen.svg" alt="License"></a><br>
 The MIT License (MIT) Copyright (c) 2015 Bunny Blue,achellies</p>
 
-<p>Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:</p>
-
-<p>The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.</p>
-
-<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.</p>
+<h1>
+<a id="feature--wiki" class="anchor" href="#feature--wiki" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/bunnyblue/ACDD/wiki#feature">Feature @ Wiki</a>
+</h1>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/bunnyblue/ACDD">ACDD</a> is maintained by <a href="https://github.com/bunnyblue">bunnyblue</a>.</span>
