@@ -47,6 +47,7 @@ import android.text.TextUtils;
 
 import org.acdd.framework.ACDD;
 import org.acdd.framework.BundleImpl;
+import org.acdd.framework.Framework;
 import org.acdd.framework.InternalConstant;
 import org.acdd.hack.ACDDHacks;
 import org.acdd.hack.Hack;
@@ -650,6 +651,7 @@ public class BundlePackageManager {
             Field declaredField = cls.getDeclaredField("intent");
             declaredField.setAccessible(true);
             Intent intent = (Intent) declaredField.get(obj);
+            intent.setExtrasClassLoader(Framework.getSystemClassLoader());
             Bundle bundle = (Bundle) intent.getExtras();
             if (intent.getBooleanExtra(InternalConstant.STUB_CHECKED,false)) {
                 Field activityInfo = cls.getDeclaredField("activityInfo");
@@ -693,6 +695,7 @@ public class BundlePackageManager {
             Field declaredField = cls.getDeclaredField("intent");
             declaredField.setAccessible(true);
             Intent intent = (Intent) declaredField.get(obj);
+            intent.setExtrasClassLoader(Framework.getSystemClassLoader());
             Bundle bundle = (Bundle) intent.getExtras();
             if (intent.getBooleanExtra(InternalConstant.STUB_CHECKED,false)) {
                 intent.removeExtra(InternalConstant.STUB_CHECKED);
