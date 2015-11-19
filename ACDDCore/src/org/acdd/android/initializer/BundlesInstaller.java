@@ -92,7 +92,7 @@ public class BundlesInstaller {
 			ZipFile zipFile = null;
 			try {
 				zipFile = new ZipFile(this.application.getApplicationInfo().sourceDir);
-				List<String> bundleList = fetchBundleFileList(zipFile, "lib/"+ ACDDConfig.PRELOAD_DIR+"/libcom_", ".so");
+				List<String> bundleList = fetchBundleFileList(zipFile,  ".so");
 				if (bundleList != null && bundleList.size() > 0 && getAvailableSize() < ((long) (((bundleList.size() * 2) * 1024) * 1024))) {
 					new Handler(Looper.getMainLooper()).post(new Runnable() {
 						public void run() {
@@ -138,13 +138,13 @@ public class BundlesInstaller {
 		}
 	}
 
-	private List<String> fetchBundleFileList(ZipFile zipFile, String prefix, String suffix) {
+	private List<String> fetchBundleFileList(ZipFile zipFile,  String suffix) {
 		List<String> arrayList = new ArrayList<String>();
 		try {
 			Enumeration<?> entries = zipFile.entries();
 			while (entries.hasMoreElements()) {
 				String name = ((ZipEntry) entries.nextElement()).getName();
-				if (name.startsWith(prefix) && name.endsWith(suffix)) {
+				if ((name.startsWith(ACDDConfig.BUNDLE_PREFIX_COM)||name.startsWith(ACDDConfig.BUNDLE_PREFIX_CN)) && name.endsWith(suffix)) {
 					arrayList.add(name);
 				}
 			}

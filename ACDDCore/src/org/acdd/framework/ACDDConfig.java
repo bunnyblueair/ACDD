@@ -38,6 +38,8 @@ public class ACDDConfig {
 
     /**plugin preload  dir ******/
     public static String PRELOAD_DIR = "armeabi";
+    public  static  String BUNDLE_PREFIX_COM="lib/"+ ACDDConfig.PRELOAD_DIR+"/libcom_";
+    public  static  String BUNDLE_PREFIX_CN="lib/"+ ACDDConfig.PRELOAD_DIR+"/libcn_";
     /**enable opt dex on ART ****/
     public static boolean  optART=true;
     /******enable sub process******/
