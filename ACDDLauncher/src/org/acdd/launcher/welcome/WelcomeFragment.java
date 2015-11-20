@@ -55,6 +55,7 @@ import android.view.animation.AnimationUtils;
 import com.eftimoff.androipathview.PathView;
 
 import org.acdd.framework.InternalConstant;
+import org.acdd.launcher.AA;
 import org.acdd.launcher.LauncherActivity;
 import org.acdd.launcher.R;
 import org.acdd.runtime.Globals;
@@ -77,6 +78,7 @@ public class WelcomeFragment extends Fragment implements Callback {
     private boolean mHasBitmap;
     private PathView[] pathViewArray;
     private View welcomSlogan;
+    public  static  boolean start=false;
 
     private class BundlesInstallBroadcastReceiver extends BroadcastReceiver {
        
@@ -313,17 +315,24 @@ public class WelcomeFragment extends Fragment implements Callback {
     }
 
     public void gotoMainActivity(boolean z) {
-    	System.out.println("WelcomeFragment.gotoMainActivity()");
+        if(start){
+            start=true;
+            System.out.println("WelcomeFragment.gotoMainActivity()");
+
+            return;
+        }
+
       //  boolean z2 = false;.//com.openatlas.homelauncher.MainActivity
         if (getActivity()!=null&&LauncherActivity.class==getActivity().getClass() ) {
 
         	Intent mIntent=new Intent();
     		mIntent.setClassName(getActivity(), "com.acdd.homelauncher.MainActivity");
-    		startActivity(mIntent);
+            mIntent.putExtra("aa",new AA());
+            startActivity(mIntent);
             LauncherActivity.doLaunchoverUT();
             getActivity().finish();
         }else {
-			Log.e(getClass().getSimpleName()	, "getActivity() is null");
+            Log.e(getClass().getSimpleName(), "getActivity() is null");
 		}
     }
 

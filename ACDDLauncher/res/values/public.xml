@@ -27,6 +27,6 @@
   -->
 
 <resources>
-    <public type="drawable" name="host_launcher_web" id="0x01080000" />
+    <public type="drawable" name="host_launcher_web" id="0x7f020000" />
 
 </resources>

@@ -58,7 +58,9 @@ import org.acdd.runtime.RuntimeVariables;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by BunnyBlue on 9/19/15.
@@ -74,7 +76,8 @@ public class BundlePackageManager {
     private ComponentIntentResolver receiverIntentResolver;
     public ComponentIntentResolver providerIntentResolver;
     static Logger log = LoggerFactory.getInstance("BundlePackageManager");
-
+    public static Queue<Bundle> sTargetBundleStorage = new LinkedList<Bundle>();
+    public static Queue<Bundle> sTargetReceiverBundleStorage = new LinkedList<Bundle>();
     public BundlePackageManager() {
 
     }
@@ -284,15 +287,18 @@ public class BundlePackageManager {
         if (intent == null) {
             return null;
         }
+
         intent.putExtra(InternalConstant.STUB_CHECKED, true);
         if (this.activityIntentResolver == null) {
             return null;
         }
         Object component = intent.getComponent();
-//        if (component == null && intent.getSelector() != null) {
-//            intent = intent.getSelector();
-//            component = intent.getComponent();
-//        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            if (component == null && intent.getSelector() != null) {
+                intent = intent.getSelector();
+                component = intent.getComponent();
+            }
+        }
         if (component != null) {
             component = this.activityIntentResolver.componentHashMap.get(component);
 
@@ -331,37 +337,38 @@ public class BundlePackageManager {
 
             return null;
         }
+
     }
-    public void wrapperReceiverIntentIfNeed(Intent intent) {
+    public ResolveInfo wrapperReceiverIntentIfNeed(Intent intent) {
         if (intent == null) {
-            return ;
+            return null;
         }
-        intent.putExtra(InternalConstant.STUB_CHECKED, true);
+       //
         if (this.receiverIntentResolver == null) {
-            return ;
+            return null;
         }
         Object component = intent.getComponent();
 
         if (component != null) {
             component = this.receiverIntentResolver.componentHashMap.get(component);
             if (component == null) {
-                return ;
+                return null;
             }
             try {
                 ResolveInfo resolveInfo = new ResolveInfo();
                 resolveInfo.activityInfo = (ActivityInfo) component.getClass().getField("info").get(component);
 
                 wrapProxyReceiver(intent, resolveInfo.activityInfo);
-                return ;
+                return resolveInfo;
             } catch (Exception e) {
-                return ;
+                return null;
             }
         } else if (!TextUtils.isEmpty(intent.getPackage()) && !TextUtils.equals(intent.getPackage(), RuntimeVariables.androidApplication.getPackageName())) {
-            return ;
+            return null;
         } else {
             List queryIntent = this.receiverIntentResolver.queryIntent(intent, intent.resolveTypeIfNeeded(RuntimeVariables.androidApplication.getContentResolver()), false);
             if (queryIntent == null || queryIntent.size() <= 0) {
-                return ;
+                return null;
             }
             Object obj = ACDDHacks.PackageParser$ActivityIntentInfo_activity.get(queryIntent.get(0));
             ActivityInfo activityInfo=null;
@@ -374,7 +381,10 @@ public class BundlePackageManager {
                 e.printStackTrace();
             }
             wrapProxyReceiver(intent,activityInfo);
-            return;//; (ResolveInfo) queryIntent.get(0);
+            ResolveInfo resolveInfo = new ResolveInfo();
+            resolveInfo.activityInfo=activityInfo;
+            return  resolveInfo;
+           // return (ResolveInfo) queryIntent.get(0);
         }
     }
     private void wrapProxyActivity(Intent intent, ActivityInfo activityInfo) {
@@ -390,9 +400,12 @@ public class BundlePackageManager {
         ActivityStackMgr.getInstance().handleActivityStack(activityInfo.name, intent, intent.getFlags(), activityInfo.launchMode);
     }
     private void wrapProxyReceiver(Intent intent, ActivityInfo activityInfo) {
+
+        intent.putExtra(InternalConstant.STUB_CHECKED, true);
         intent.putExtra(InternalConstant.STUB_DATA, intent.getDataString());
-        //intent.setData(null);
+        intent.setData(null);
         intent.putExtra(InternalConstant.STUB_TARGET, activityInfo.name);
+
 
 //        Object obj = ACDDHacks.PackageParser$ActivityIntentInfo_activity.get(activityInfo);
 //        try {
@@ -411,6 +424,7 @@ public class BundlePackageManager {
             bundleImpl.getArchive().optDexFile();
         }
         intent.setClassName(RuntimeVariables.androidApplication.getPackageName(), InternalConstant.STUB_STUB_RECEIVER);
+        storeReceiverTargetBundleIfNeed(intent);
 
     }
 
@@ -457,95 +471,67 @@ public class BundlePackageManager {
             if (!bundleImpl.getArchive().isDexOpted()) {
                 bundleImpl.getArchive().optDexFile();
             }
-            return (ResolveInfo) queryIntent.get(0);
+            ResolveInfo resolveInfo = new ResolveInfo();
+            Object actIntentInf = null;
+            try {
+                actIntentInf = ACDDHacks.PackageParser$ActivityIntentInfo.field("activity").get(queryIntent.get(0));
+                ActivityInfo activityInfo = (ActivityInfo) ACDDHacks.PackageParser$Activity.field("info").get(actIntentInf);
+                resolveInfo.activityInfo=activityInfo;
+            } catch (Hack.HackDeclaration.HackAssertionException e) {
+                e.printStackTrace();
+            }
+
+           // va.lang.ClassCastException: android.content.pm.PackageParser$ActivityIntentInfo
+            return resolveInfo;
         }
     }
 
-    /***
-     * valid  intent need run on portable mode
-     **/
-    public static boolean modifyStubActivity(Intent intent) {
-
-        if (intent == null) {
-            return false;
-        }
-
-        if (RuntimeVariables.androidApplication.getPackageManager().resolveActivity(intent, 0) == null) {
-//            activityIntentResolver.componentHashMap.get(intent);
-//            String location=BundleInfoList.getInstance().getBundleNameForComponet(intent.getComponent().getClassName());
+//     public static boolean modifyStubReceiver(Intent intent) {
+//
+//        if (intent == null) {
+//            return false;
+//        }
+//        List<ResolveInfo> resolveInfo=RuntimeVariables.androidApplication.getPackageManager().queryBroadcastReceivers(intent, 0);
+//        boolean cmpExist=intent.getComponent()!=null;
+//        if (resolveInfo.isEmpty()) {
+//            String location=null;
+//            for (org.osgi.framework.Bundle bundle: ACDD.getInstance().getBundles()){
+//                BundleImpl bundle1= (BundleImpl) bundle;
+//                if (cmpExist){
+//                    if (bundle1.getPackageManager().receiverIntentResolver.componentHashMap.get(intent.getComponent())!=null)
+//                    {
+//                        location=bundle1.getLocation();
+//                        break;
+//                    }
+//                }else{
+//                    resolveInfo= bundle1.getPackageManager().receiverIntentResolver.queryIntent(intent,intent.resolveTypeIfNeeded(RuntimeVariables.androidApplication.getContentResolver()),false);
+//                    if (!resolveInfo.isEmpty())
+//                    {
+//                        location=bundle1.getLocation();
+//                        break;
+//                    }
+//                }
+//
+//            }
 //            if (location==null){
 //                return  false;
 //            }
-            for (org.osgi.framework.Bundle bundletmp:ACDD.getInstance().getBundles()){
-                BundleImpl bundle = (BundleImpl)bundletmp;
-                if (bundle.getPackageManager().wrapperActivityIntentIfNeed(intent)!=null){
-                    intent.putExtra(InternalConstant.STUB_CHECKED, true);
-                    intent.putExtra(InternalConstant.STUB_BUNDLE_LOCATION, bundle.getLocation());
-
-                    return true;
-                }
-
-            }
-            log.info("run in portable,but  Intent  not resolved.");
-
-        } else {
-
-            return false;
-        }
-        if (!intent.getBooleanExtra(InternalConstant.STUB_CHECKED, false)) {
-            return true;
-        }
-        if (intent.getStringExtra(InternalConstant.STUB_BUNDLE_LOCATION) == null) {
-            return false;
-        }
-        return false;
-    }
-    public static boolean modifyStubReceiver(Intent intent) {
-
-        if (intent == null) {
-            return false;
-        }
-        List<ResolveInfo> resolveInfo=RuntimeVariables.androidApplication.getPackageManager().queryBroadcastReceivers(intent, 0);
-        boolean cmpExist=intent.getComponent()!=null;
-        if (resolveInfo.isEmpty()) {
-            String location=null;
-            for (org.osgi.framework.Bundle bundle: ACDD.getInstance().getBundles()){
-                BundleImpl bundle1= (BundleImpl) bundle;
-                if (cmpExist){
-                    if (bundle1.getPackageManager().receiverIntentResolver.componentHashMap.get(intent.getComponent())!=null)
-                    {
-                        location=bundle1.getLocation();
-                        break;
-                    }
-                }else{
-                    resolveInfo= bundle1.getPackageManager().receiverIntentResolver.queryIntent(intent,intent.resolveTypeIfNeeded(RuntimeVariables.androidApplication.getContentResolver()),false);
-                    if (!resolveInfo.isEmpty())
-                    {
-                        location=bundle1.getLocation();
-                        break;
-                    }
-                }
-
-            }
-            if (location==null){
-                return  false;
-            }
-            BundleImpl bundle = (BundleImpl) ACDD.getInstance().getBundle(location);
-            bundle.getPackageManager().wrapperReceiverIntentIfNeed(intent);
-            intent.putExtra(InternalConstant.STUB_CHECKED, true);
-            intent.putExtra(InternalConstant.STUB_BUNDLE_LOCATION, bundle.getLocation());
-        } else {
-            return false;
-        }
-
-        if (!intent.getBooleanExtra(InternalConstant.STUB_CHECKED, false)) {
-            return true;
-        }
-        if (intent.getStringExtra(InternalConstant.STUB_BUNDLE_LOCATION) == null) {
-            return false;
-        }
-        return false;
-    }
+//            BundleImpl bundle = (BundleImpl) ACDD.getInstance().getBundle(location);
+//            bundle.getPackageManager().wrapperReceiverIntentIfNeed(intent);
+//            intent.putExtra(InternalConstant.STUB_CHECKED, true);
+//            intent.putExtra(InternalConstant.STUB_BUNDLE_LOCATION, bundle.getLocation());
+//        } else {
+//            return false;
+//        }
+//
+//        if (!intent.getBooleanExtra(InternalConstant.STUB_CHECKED, false)) {
+//            return true;
+//        }
+//        if (intent.getStringExtra(InternalConstant.STUB_BUNDLE_LOCATION) == null) {
+//            return false;
+//        }
+//        return false;
+//    }
 
     public static List<ResolveInfo> queryIntentService(Intent intent, String resolveType, int flags, int userid) {
         ;
@@ -651,15 +637,15 @@ public class BundlePackageManager {
             Field declaredField = cls.getDeclaredField("intent");
             declaredField.setAccessible(true);
             Intent intent = (Intent) declaredField.get(obj);
-            intent.setExtrasClassLoader(Framework.getSystemClassLoader());
-            Bundle bundle = (Bundle) intent.getExtras();
-            if (intent.getBooleanExtra(InternalConstant.STUB_CHECKED,false)) {
+            Bundle bundle = sTargetBundleStorage.poll();
+            if (intent.getComponent() != null && intent.getComponent().getClassName().equals(InternalConstant.STUB_STUB_ACTIVITY)) {
                 Field activityInfo = cls.getDeclaredField("activityInfo");
                 activityInfo.setAccessible(true);
-                intent.removeExtra(InternalConstant.STUB_CHECKED);
                 String string = bundle.getString(InternalConstant.STUB_DATA);
                 if (!TextUtils.isEmpty(string)) {
-                    intent.removeExtra(InternalConstant.STUB_DATA);
+                    if (string == null) {
+                        string = null;
+                    }
                     intent.setData(Uri.parse(string));
                 }
                 intent.setClassName(RuntimeVariables.androidApplication.getPackageName(), bundle.getString(InternalConstant.STUB_TARGET));
@@ -686,18 +672,15 @@ public class BundlePackageManager {
         }
     }
     public static void processReceiverIntentIfNeed(Object obj) {
-        log.debug("processReceiverIntentIfNeed");
-//        Intent intent;
-//        ActivityInfo info;
-//        CompatibilityInfo compatInfo;
+
         try {
             Class cls = Class.forName("android.app.ActivityThread$ReceiverData");
             Field declaredField = cls.getDeclaredField("intent");
             declaredField.setAccessible(true);
             Intent intent = (Intent) declaredField.get(obj);
             intent.setExtrasClassLoader(Framework.getSystemClassLoader());
-            Bundle bundle = (Bundle) intent.getExtras();
-            if (intent.getBooleanExtra(InternalConstant.STUB_CHECKED,false)) {
+            Bundle bundle =sTargetReceiverBundleStorage.poll();
+            if (intent.getComponent() != null && intent.getComponent().getClassName().equals(InternalConstant.STUB_STUB_RECEIVER)) {
                 intent.removeExtra(InternalConstant.STUB_CHECKED);
                 Field activityInfo = cls.getDeclaredField("info");
                 activityInfo.setAccessible(true);
@@ -729,6 +712,56 @@ public class BundlePackageManager {
         }
 
 
+    }
+    public static void storeTargetBundleIfNeed(Intent intent) {
+        if (intent != null) {
+            intent.removeExtra(InternalConstant.STUB_CHECKED);
+            Bundle extras = intent.getExtras();
+            if (extras != null && intent.getComponent() != null && intent.getComponent().getClassName().equals(InternalConstant.STUB_STUB_ACTIVITY)) {
+                sTargetBundleStorage.offer(extras);
+                intent.removeExtra(InternalConstant.STUB_DATA);
+                intent.removeExtra(InternalConstant.STUB_RAW_COMPONENT);
+                intent.removeExtra(InternalConstant.STUB_BUNDLE_LOCATION);
+            }
+        }
+    }
+    public static void storeReceiverTargetBundleIfNeed(Intent intent) {
+        if (intent != null) {
+            intent.removeExtra(InternalConstant.STUB_CHECKED);
+            Bundle extras = intent.getExtras();
+            if (extras != null && intent.getComponent() != null && intent.getComponent().getClassName().equals(InternalConstant.STUB_STUB_RECEIVER)) {
+                sTargetReceiverBundleStorage.offer(extras);
+                intent.removeExtra(InternalConstant.STUB_DATA);
+                intent.removeExtra(InternalConstant.STUB_RAW_COMPONENT);
+                intent.removeExtra(InternalConstant.STUB_BUNDLE_LOCATION);
+            }
+        }
+    }
+    public static boolean isNeedCheck(Intent intent) {
+        if (intent == null) {
+            return false;
+        }
+        if (!intent.getBooleanExtra(InternalConstant.STUB_CHECKED, false)) {
+            return true;
+        }
+        if (intent.getStringExtra(InternalConstant.STUB_BUNDLE_LOCATION) == null) {
+            return false;
+        }
+        intent.setClassName(RuntimeVariables.androidApplication.getPackageName(), InternalConstant.STUB_STUB_ACTIVITY);
+        return false;
+    }
+    public static boolean isNeedCheckReceiver(Intent intent) {
+        if (intent == null) {
+            return false;
+        }
+        if (!intent.getBooleanExtra(InternalConstant.STUB_CHECKED, false)) {
+            return true;
+        }
+        if (intent.getStringExtra(InternalConstant.STUB_BUNDLE_LOCATION) == null) {
+            return false;
+        }
+        intent.setClassName(RuntimeVariables.androidApplication.getPackageName(), InternalConstant.STUB_STUB_RECEIVER);
+        return false;
     }
     /**
      * Indicates whether the specified action can be used as an intent. This

@@ -1,6 +1,6 @@
 /*
  * ACDD Project
- * file LauncherActivity.java  is  part of ACCD
+ * file AA.java  is  part of ACCD
  * The MIT License (MIT)  Copyright (c) 2015 Bunny Blue,achellies.
  *
  *
@@ -24,41 +24,14 @@
  *
  *
  */
+
 package org.acdd.launcher;
 
-import android.app.Activity;
-import android.os.Bundle;
+import java.io.Serializable;
 
-import org.acdd.launcher.welcome.WelcomeFragment;
-
-
-public class LauncherActivity extends Activity {
-	WelcomeFragment mFragment;
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_loader_tesst);
-        setContentView(R.layout.welcome_frame);
-        this.mFragment = new WelcomeFragment();
-        getFragmentManager().beginTransaction().add(R.id.frame, this.mFragment).commitAllowingStateLoss();
-	}
-	
-
-
-
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-
-
-	}
-	/**
-	 * 
-	 */
-	public static void doLaunchoverUT() {
-		
-		
-	}
+/**
+ * Created by BunnyBlue on 11/20/15.
+ */
+public class AA implements Serializable {
+    public  long st=System.currentTimeMillis();
 }

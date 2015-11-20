@@ -63,6 +63,7 @@ public class InternalConstant {
     public  static  final String STUB_TARGET="accd_stub2";
     public  static  final String STUB_CHECKED="accd_stub3";
     public  static  final String STUB_DATA="accd_stub4";
+    public  static  final String STUB_RAW_COMPONENT="accd_Component";
     public  static  final String STUB_STUB_ACTIVITY="org.acdd.runtime.stub.StubActivity";
     public  static  final String STUB_STUB_RECEIVER="org.acdd.runtime.stub.StubReceiver";
 

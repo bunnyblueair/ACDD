@@ -50,6 +50,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 import org.acdd.bundleInfo.BundleInfoList;
+import org.acdd.framework.ACDD;
 import org.acdd.framework.ACDDConfig;
 import org.acdd.framework.BundleClassLoader;
 import org.acdd.framework.BundleImpl;
@@ -106,8 +107,8 @@ public class InstrumentationHook extends Instrumentation {
                 throw new NullPointerException("could not hook Instrumentation!");
             }
             if (ACDDConfig.stubModeEnable) {
-
-                BundlePackageManager.modifyStubActivity(intent);
+                BundlePackageManager.storeTargetBundleIfNeed(intent);
+               // BundlePackageManager.modifyStubActivity(intent);
             }
 
             try {
@@ -154,7 +155,8 @@ public class InstrumentationHook extends Instrumentation {
                 throw new NullPointerException("could not hook Instrumentation!");
             }
             if (ACDDConfig.stubModeEnable) {
-                BundlePackageManager.modifyStubActivity(intent);
+                BundlePackageManager.storeTargetBundleIfNeed(intent);
+               // BundlePackageManager.modifyStubActivity(intent);
             }
             try {
                 return (ActivityResult) mExecStartActivity.invoke(mBase, this.who, this.contextThread, this.token,
@@ -191,7 +193,8 @@ public class InstrumentationHook extends Instrumentation {
                 throw new NullPointerException("could not hook Instrumentation!");
             }
             if (ACDDConfig.stubModeEnable) {
-                BundlePackageManager.modifyStubActivity(intent);
+                BundlePackageManager.storeTargetBundleIfNeed(intent);
+               // BundlePackageManager.modifyStubActivity(intent);
             }
             try {
                 return (ActivityResult) mExecStartActivityFragment.invoke(mBase, this.who, this.contextThread, this.token,
@@ -232,7 +235,8 @@ public class InstrumentationHook extends Instrumentation {
                 throw new NullPointerException("could not hook Instrumentation!");
             }
             if (ACDDConfig.stubModeEnable) {
-                BundlePackageManager.modifyStubActivity(intent);
+                BundlePackageManager.storeTargetBundleIfNeed(intent);
+              //  BundlePackageManager.modifyStubActivity(intent);
             }
 
             try {
@@ -335,6 +339,8 @@ public class InstrumentationHook extends Instrumentation {
     private ActivityResult execStartActivityInternal(Context context, Intent intent, ExecStartActivityCallback execStartActivityCallback) {
         String packageName = null;
         String mComponentName = null;
+
+
         ActivityResult activityResult = null;
         if (intent.getComponent() != null) {
             packageName = intent.getComponent().getPackageName();
@@ -345,6 +351,13 @@ public class InstrumentationHook extends Instrumentation {
             } else {
                 packageName = resolveActivity.activityInfo.packageName;
                 mComponentName = resolveActivity.activityInfo.name;
+            }
+        }
+        if (BundlePackageManager.isNeedCheck(intent)) {
+            for (org.osgi.framework.Bundle bundle : ACDD.getInstance().getBundles()) {
+                if (((BundleImpl) bundle).isUpdated() && ((BundleImpl) bundle).getPackageManager().wrapperActivityIntentIfNeed(intent) != null) {
+                    break;
+                }
             }
         }
         if (mComponentName == null) {
