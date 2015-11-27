@@ -139,6 +139,7 @@ public class OptDexProcess {
             if (mBundle != null) {
                 try {
                     ((BundleImpl) mBundle).optDexFile();
+                 //   Log.e("OptDexProcess", " dexopt >>>"+mBundle.getLocation());
                 } catch (Throwable e) {
                     if (e instanceof DexLoadException) {
                         throw ((RuntimeException) e);

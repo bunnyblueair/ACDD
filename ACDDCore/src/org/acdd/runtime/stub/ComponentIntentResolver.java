@@ -35,9 +35,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
-import android.util.Log;
 
 import org.acdd.hack.ACDDHacks;
+import org.acdd.log.Logger;
+import org.acdd.log.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class ComponentIntentResolver extends IntentResolver<IntentFilter, Resolv
     protected final HashMap<ComponentName, Object> componentHashMap = new HashMap();
     protected final HashMap<String, ProviderInfo> providerInfoHashMap = new HashMap();
     private int flags;
-
+    static Logger logger= LoggerFactory.getInstance(ComponentIntentResolver.class);
     public Collection<ProviderInfo> getProviders(){
         Collection<ProviderInfo> collection=new ArrayList<ProviderInfo>(providerInfoHashMap.size());
         Iterator iter = providerInfoHashMap.entrySet().iterator();
@@ -115,13 +116,13 @@ public class ComponentIntentResolver extends IntentResolver<IntentFilter, Resolv
             componentName = null;
         }
         if (componentName != null) {
-            Log.e("ComponentIntentResolveX", componentName.getPackageName() + "/" + componentName.getClassName());
+          //  Log.e("ComponentIntentResolveX", componentName.getPackageName() + "/" + componentName.getClassName());
             this.componentHashMap.put(componentName, obj);
         }
         ArrayList arrayList = (ArrayList) ACDDHacks.PackageParser$Activity_intents.get(obj);
         int size = arrayList.size();
         for (int i = 0; i < size; i++) {
-            Log.e("==debug=",arrayList.get(i).toString());
+           // Log.e("==debug=",arrayList.get(i).toString());
             addFilter((IntentFilter) arrayList.get(i));
         }
     }

@@ -32,9 +32,10 @@ import org.acdd.framework.ACDDConfig;
 
 public class BootApp extends ACDDApp {
 	static{
-		ACDDConfig.DELAY = new String[]{"com.acdd.qrcode","libcom.acdd.testapp1","libcom.acdd.testapp2"};
+		ACDDConfig.DELAY = new String[]{"cn.acdd.qrcode","libcom.acdd.testapp1","libcom.acdd.testapp2"};
 		ACDDConfig.AUTO = new String[]{"com.acdd.homelauncher","cn.acdd.qrcode","com.acdd.android.game2","com.acdd.universalimageloader.sample"};
-		ACDDConfig.STORE = new String[]{"com.acdd.android.appcenter","com.acdd.universalimageloader.sample"};
+		ACDDConfig.STORE = new String[]{"com.acdd.android.appcenter"};
+		ACDDConfig.stubModeEnable=true;
 	}
 
 	

@@ -32,15 +32,11 @@ package org.acdd.launcher.welcome;
  */
 
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
@@ -50,7 +46,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AnimationUtils;
 
 import com.eftimoff.androipathview.PathView;
 
@@ -58,16 +53,14 @@ import org.acdd.framework.InternalConstant;
 import org.acdd.launcher.AA;
 import org.acdd.launcher.LauncherActivity;
 import org.acdd.launcher.R;
-import org.acdd.runtime.Globals;
 
 
 public class WelcomeFragment extends Fragment implements Callback {
-    private static final int MSG_ACTIIVTY_FINISH = 12;
     private static final int MSG_ANIMATE_LOGO = 1235;
     private static final int MSG_CONSUME_FINISH = 11;
-    private static final int MSG_CONSUME_TIMEOUT = 13;
+
     private static final int MSG_FINISH_WELCOME = 1236;
-    private static final int MSG_SHOW_SLOGAN = 1234;
+
     private static final String TAG = "WelcomeFregment";
     private BundlesInstallBroadcastReceiver acddBroadCast;
     private long bundlestart;
@@ -90,6 +83,7 @@ public class WelcomeFragment extends Fragment implements Callback {
         @Override
 		public void onReceive(Context context, Intent intent) {
             try {
+                System.err.println(intent.getAction()+"BundlesInstallBroadcastReceiver");
             	WelcomeFragment.this.consumeFinish();
             	WelcomeFragment.this.mHandler.sendEmptyMessage(WelcomeFragment.MSG_CONSUME_FINISH);
             } catch (Exception e) {
@@ -150,93 +144,10 @@ public class WelcomeFragment extends Fragment implements Callback {
       start();
       init();
         return viewGroup2;
- //  this.mBmStart = a.getInstance().getBootBitmap();
-//        if ((!LauncherActivity.isAtlasDexopted()) ) {
-//            ViewGroup viewGroup2 = (ViewGroup) layoutInflater.inflate(R.layout.welcome, viewGroup, false);
-//            LinearLayout linearLayout = (LinearLayout) viewGroup2.findViewById(R.id.ll_pathframe);
-//            this.pathViewArray = new PathView[linearLayout.getChildCount()];
-//            for (int i = 0; i < this.pathViewArray.length; i++) {
-//                this.pathViewArray[i] = (PathView) linearLayout.getChildAt(i);
-//                if (i == 0) {
-//                    this.pathViewArray[i].setSvgResource(R.raw.logo_shou);
-//                    this.pathViewArray[i].setVisibility(View.VISIBLE);
-//                } else if (i == 1) {
-//                    this.pathViewArray[i].setSvgResource(R.raw.logo_ji);
-//                } else if (i == 2) {
-//                    this.pathViewArray[i].setSvgResource(R.raw.logo_tao);
-//                } else if (i == 3) {
-//                    this.pathViewArray[i].setSvgResource(R.raw.logo_bao);
-//                }
-//            }
-//            this.welcomSlogan = viewGroup2.findViewById(R.id.welcome_slogan);
-//            viewGroup2.findViewById(R.id.welcome_slogan).setVisibility(View.VISIBLE);
-//            if (LauncherActivity.isAtlasDexopted()) {
-//                viewGroup2.findViewById(R.id.welcome_slogan).setVisibility(View.VISIBLE);
-////                ((PathView) linearLayout.getChildAt(0)).setPercentage(1.0f);
-////                ((PathView) linearLayout.getChildAt(1)).setPercentage(1.0f);
-////                ((PathView) linearLayout.getChildAt(2)).setPercentage(1.0f);
-////                ((PathView) linearLayout.getChildAt(3)).setPercentage(1.0f);
-//            } else {
-//                startAnimationForWait();
-//            }
-//        } else {
-//            imageView = new ImageView(layoutInflater.getContext());
-////            if (this.mBmStart != null) {
-////                imageView.setBackgroundDrawable(new BitmapDrawable(this.mBmStart));
-////            }
-//            imageView.setLayoutParams(new LayoutParams(-1, -1));
-//            this.mHasBitmap = true;
-//        }
-        // return imageView;
     }
 
-    public boolean isHasOwnBitmap() {
-        return this.mHasBitmap;
-    }
 
-    private void startAnimationForWait() {
-        for (int i = 0; i < this.pathViewArray.length; i++) {
-            if (VERSION.SDK_INT >= MSG_CONSUME_FINISH) {
-                Animator ofFloat = ObjectAnimator.ofFloat(this.pathViewArray[i], "phase", 1.0f, 0.0f);
-                ofFloat.setDuration(4000);
-                Animator ofFloat2 = ObjectAnimator.ofFloat(this.pathViewArray[i], "fillTransparency", 0.0f, 1.0f);
-                ofFloat2.setDuration(4000);
-                AnimatorSet animatorSet = new AnimatorSet();
-                animatorSet.play(ofFloat).before(ofFloat2);
-                animatorSet.start();
-            } else if (this.welcomSlogan != null) {
-                this.welcomSlogan.setVisibility(0);
-              //  this.pathViewArray[i].setPercentage(1.0f);
-            }
-        }
-        if (VERSION.SDK_INT >= MSG_CONSUME_FINISH) {
-            this.mHandler.sendEmptyMessageDelayed(MSG_SHOW_SLOGAN, 5500);
-        }
-    }
 
-    private void startAnimationForWaitSecond() {
-        for (int i = 0; i < this.pathViewArray.length; i++) {
-            if (VERSION.SDK_INT >= MSG_CONSUME_FINISH) {
-                AnimatorSet animatorSet = new AnimatorSet();
-                ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.pathViewArray[i], "scaleX", 1.0f, 1.1f);
-                ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this.pathViewArray[i], "scaleY", 1.0f, 1.1f);
-                animatorSet.playTogether(ofFloat, ofFloat2);
-                animatorSet.setDuration(300);
-                ofFloat.setRepeatMode(2);
-                ofFloat.setRepeatCount(1);
-                ofFloat2.setRepeatMode(2);
-                ofFloat2.setRepeatCount(1);
-                if (i == 1) {
-                    animatorSet.setStartDelay(200);
-                } else if (i == 2) {
-                    animatorSet.setStartDelay(400);
-                } else if (i == 3) {
-                    animatorSet.setStartDelay(600);
-                }
-                animatorSet.start();
-            }
-        }
-    }
 
     @Override
 	public void onResume() {
@@ -254,19 +165,7 @@ public class WelcomeFragment extends Fragment implements Callback {
                 this.initFinish = true;
                 gotoMainActivity(false);
                 break;
-            case MSG_CONSUME_TIMEOUT /*13*/:
-                consumeFinish();
-                this.initFinish = true;
-                gotoMainActivity(false);
-                break;
-            case MSG_SHOW_SLOGAN /*1234*/:
-                if (this.welcomSlogan != null) {
-                    this.welcomSlogan.setVisibility(0);
-                    this.welcomSlogan.startAnimation(AnimationUtils.loadAnimation(Globals.getApplication(), R.anim.welcome_slogan_anim));
-                    this.mHandler.sendEmptyMessageDelayed(MSG_ANIMATE_LOGO, 1000);
-                    break;
-                }
-                break;
+
             case MSG_ANIMATE_LOGO /*1235*/:
 //                View findViewById = getView().findViewById(R.id.tv_tips);
 //                findViewById.setVisibility(0);
@@ -298,8 +197,10 @@ public class WelcomeFragment extends Fragment implements Callback {
             this.acddBroadCast = new BundlesInstallBroadcastReceiver();
             getActivity().registerReceiver(this.acddBroadCast, new IntentFilter(InternalConstant.ACTION_BROADCAST_BUNDLES_INSTALLED));
             this.bundlestart = System.currentTimeMillis();
-            this.mHandler.sendEmptyMessageDelayed(MSG_CONSUME_TIMEOUT, 4000);
+            System.err.println("MSG_CONSUME_TIMEOUT");
+           // this.mHandler.sendEmptyMessageDelayed(MSG_CONSUME_TIMEOUT, 4000);
         } else {
+            System.err.println("MSG_CONSUME_FINISH");
             this.mHandler.sendEmptyMessageDelayed(MSG_CONSUME_FINISH, 600);
         }
   
@@ -311,7 +212,7 @@ public class WelcomeFragment extends Fragment implements Callback {
             getActivity().unregisterReceiver(this.acddBroadCast);
         }
       
-        this.mHandler.removeMessages(MSG_CONSUME_TIMEOUT);
+     //   this.mHandler.removeMessages(MSG_CONSUME_TIMEOUT);
     }
 
     public void gotoMainActivity(boolean z) {
@@ -340,11 +241,5 @@ public class WelcomeFragment extends Fragment implements Callback {
 
 
 
-    public void enterTaobao(View view) {
-        if (this.initFinish) {
-            gotoMainActivity(false);
-        } else {
-            startAnimationForWait();
-        }
-    }
+
 }

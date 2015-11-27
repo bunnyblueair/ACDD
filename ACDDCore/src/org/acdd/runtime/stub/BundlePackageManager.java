@@ -154,11 +154,11 @@ public class BundlePackageManager {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    log.debug("=== stub== "+componentName.getClassName());
+                   // log.debug("=== stub== "+componentName.getClassName());
                     activityIntentResolver.addComponent(act);
                 }else
                 {
-                    log.debug("=== registed in host \n" + componentName.getClassName());
+                   // log.debug("=== registed in host \n" + componentName.getClassName());
                 }
 
             }
@@ -206,7 +206,7 @@ public class BundlePackageManager {
                     ProviderInfo mProviderInfo = (ProviderInfo) provider.getClass().getField("info").get(provider);
                     ProviderInfo tmp = RuntimeVariables.androidApplication.getPackageManager().resolveContentProvider(mProviderInfo.authority, 0);
                     if (tmp == null) {
-                        log.debug(mProviderInfo.name + "=== find  unregisted  provider authority=" + mProviderInfo.authority);
+                      //  log.debug(mProviderInfo.name + "=== find  unregisted  provider authority=" + mProviderInfo.authority);
                         try {
                             ((ProviderInfo) provider.getClass().getField("info").get(provider)).packageName = RuntimeVariables.androidApplication.getApplicationInfo().packageName;
                         } catch (Exception e) {
@@ -214,7 +214,7 @@ public class BundlePackageManager {
                         }
                         providerResolver.addProvider(mProviderInfo.authority, mProviderInfo);
                     } else {
-                        log.debug(mProviderInfo.name + "<<< find  in   host");
+                       // log.debug(mProviderInfo.name + "<<< find  in   host");
                     }
                 }
                 bundlePackageManager.initProviderIntentResolver(providerResolver);

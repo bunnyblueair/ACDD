@@ -420,10 +420,12 @@ public final class BundleImpl implements Bundle {
     public String toString() {
         return this.location;
     }
-    public synchronized BundlePackageManager getPackageManager() {
+    public  BundlePackageManager getPackageManager() {
         if (this.packageManager == null) {
             try {
-                this.packageManager = BundlePackageManager.parseBundle(RuntimeVariables.androidApplication, this);
+                synchronized (BundleImpl.class) {
+                    this.packageManager = BundlePackageManager.parseBundle(RuntimeVariables.androidApplication, this);
+                }
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
