@@ -51,7 +51,7 @@ import org.acdd.util.ACDDUtils;
 
 
 /****ACDDApp, you can  extend  this class direct****/
-public class ACDDApp extends Application {
+public abstract class ACDDApp extends Application {
     private  boolean  accdInited=false;
 
     private Context mBaseContext;
@@ -66,12 +66,19 @@ public class ACDDApp extends Application {
      * @see android.content.ContextWrapper#attachBaseContext(android.content.Context)
      */
     @Override
-    protected void attachBaseContext(Context base) {
+    protected  final void attachBaseContext(Context base) {
         // TODO Auto-generated method stub
         super.attachBaseContext(base);
+        attachedBaseContext(base);
         this.mBaseContext = base;
         initACDD();
     }
+    /***
+     * when base context attached invoke call attachedBaseContext
+     * after this method invoked ,PathClassLoader will be replaced
+     * if you need hack PathClassLoader,just in  attachedBaseContext
+     * **/
+    protected abstract void attachedBaseContext(Context base);
     public synchronized void initACDD(){
         if (accdInited) {
             return;

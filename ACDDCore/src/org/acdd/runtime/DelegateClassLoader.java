@@ -29,10 +29,7 @@ package org.acdd.runtime;
 import org.acdd.framework.Framework;
 import org.osgi.framework.Bundle;
 
-import java.lang.reflect.Field;
 import java.util.List;
-
-import dalvik.system.BaseDexClassLoader;
 
 /***
  * DelegateClassLoader is ClassLoader custom implementation,used for  bundle class load<br>
@@ -40,55 +37,33 @@ import dalvik.system.BaseDexClassLoader;
  ***/
 public class DelegateClassLoader extends ClassLoader {
     // add pathList field to make ACDD compatible with 'com.android.support:multidex'
-    private Object pathList;
+    //private Object pathList;
     public DelegateClassLoader(ClassLoader classLoader) {
         super(classLoader);
-        try {
-            Class classBaseDexClassLoader = Class.forName("dalvik.system.BaseDexClassLoader");
-            if (classBaseDexClassLoader.isInstance(classLoader)) {
-                Field fieldPathList = classBaseDexClassLoader.getDeclaredField("pathList");
-                fieldPathList.setAccessible(true);
-                Object object = fieldPathList.get(classLoader);
-                this.pathList = object;
-            }
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Class classBaseDexClassLoader = Class.forName("dalvik.system.BaseDexClassLoader");
+//            if (classBaseDexClassLoader.isInstance(classLoader)) {
+//                Field fieldPathList = classBaseDexClassLoader.getDeclaredField("pathList");
+//                fieldPathList.setAccessible(true);
+//                Object object = fieldPathList.get(classLoader);
+//                this.pathList = object;
+//            }
+//
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//
+//        } catch (NoSuchFieldException e) {
+//            e.printStackTrace();
+//
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//
+//        } catch (IllegalArgumentException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
-    private String getOriginalPath(ClassLoader classLoader) {
-        String originalPath="";
-        try {
-            Class classBaseDexClassLoader= BaseDexClassLoader.class;
-            if (classBaseDexClassLoader.isInstance(classLoader)) {
-                Field fieldPathList = classBaseDexClassLoader.getDeclaredField("originalPath");
-                fieldPathList.setAccessible(true);
-                originalPath = (String) fieldPathList.get(classLoader);
-               // this.pathList = object;
-            }
-
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
-        return originalPath;
-    }
 
     @Override
     public Class<?> loadClass(String className) throws ClassNotFoundException {

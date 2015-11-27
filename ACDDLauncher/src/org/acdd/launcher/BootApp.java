@@ -26,9 +26,11 @@
  */
 package org.acdd.launcher;
 
+import android.content.Context;
+
 import org.acdd.android.compat.ACDDApp;
-import org.acdd.framework.InternalConstant;
 import org.acdd.framework.ACDDConfig;
+import org.acdd.framework.InternalConstant;
 
 public class BootApp extends ACDDApp {
 	static{
@@ -43,7 +45,13 @@ public class BootApp extends ACDDApp {
 	static final String TAG = "TestApp";
 
 
-	@Override
+    @Override
+    public void attachedBaseContext(Context base) {
+
+        //MultiDex.install(base);
+    }
+
+    @Override
 	public void onCreate() {
 
 		super.onCreate();
