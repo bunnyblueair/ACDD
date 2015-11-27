@@ -353,10 +353,12 @@ public class InstrumentationHook extends Instrumentation {
                 mComponentName = resolveActivity.activityInfo.name;
             }
         }
-        if (BundlePackageManager.isNeedCheck(intent)) {
-            for (org.osgi.framework.Bundle bundle : ACDD.getInstance().getBundles()) {
-                if (((BundleImpl) bundle).isUpdated() && ((BundleImpl) bundle).getPackageManager().wrapperActivityIntentIfNeed(intent) != null) {
-                    break;
+        if (ACDDConfig.stubModeEnable) {
+            if (BundlePackageManager.isNeedCheck(intent)) {
+                for (org.osgi.framework.Bundle bundle : ACDD.getInstance().getBundles()) {
+                    if (((BundleImpl) bundle).isUpdated() && ((BundleImpl) bundle).getPackageManager().wrapperActivityIntentIfNeed(intent) != null) {
+                        break;
+                    }
                 }
             }
         }

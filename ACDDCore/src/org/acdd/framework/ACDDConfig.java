@@ -44,6 +44,6 @@ public class ACDDConfig {
     public static boolean  optART=true;
     /******enable sub process******/
     public static boolean  subProcessEnable=false;
-    public static boolean  stubModeEnable=true;
+    public static boolean  stubModeEnable=false;
 
 }
