@@ -103,19 +103,21 @@ public class BundleArchive implements Archive {
         BundleArchiveRevision bundleArchiveRevision = new BundleArchiveRevision(location, longValue, new File(bundleDir, "version." + String.valueOf(longValue)));
         this.revisions.put(Long.valueOf(longValue), bundleArchiveRevision);
         this.currentRevision = bundleArchiveRevision;
-        //remove  old version
-        for (int i = 1; i < longValue; i++) {
-            File mBundleDir = new File(bundleDir, "version." + String.valueOf(i));
-            if (mBundleDir.isDirectory()) {
-                File[] listFilesSub = mBundleDir.listFiles();
-                for (File file : listFilesSub) {
-                    file.delete();
+        if (RuntimeVariables.inSubProcess){
+            //remove  old version
+            for (int i = 1; i < longValue; i++) {
+                File mBundleDir = new File(bundleDir, "version." + String.valueOf(i));
+                if (mBundleDir.isDirectory()) {
+                    File[] listFilesSub = mBundleDir.listFiles();
+                    for (File file : listFilesSub) {
+                        file.delete();
+                    }
+
+                    mBundleDir.delete();
                 }
+                log.info("remove old  bundle@" + mBundleDir.getAbsolutePath() + " last version : " + currentRevision);
 
-                mBundleDir.delete();
             }
-            log.info("remove old  bundle@" + mBundleDir.getAbsolutePath() + " last version : " + currentRevision);
-
         }
         //remove old version
     }

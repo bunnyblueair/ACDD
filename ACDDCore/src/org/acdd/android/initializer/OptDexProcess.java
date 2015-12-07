@@ -38,7 +38,11 @@ import org.acdd.framework.bundlestorage.BundleArchiveRevision.DexLoadException;
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
 
+import org.acdd.runtime.RuntimeVariables;
 import org.osgi.framework.Bundle;
+
+import java.io.IOException;
+import java.util.zip.ZipFile;
 
 public class OptDexProcess {
 	Logger log=LoggerFactory.getInstance("OptDexProcess");
@@ -66,6 +70,7 @@ public class OptDexProcess {
     }
 
     public synchronized void processPackages(boolean onlyOptAutos, boolean noNeedNotifyUI) {
+       // onlyOptAutos=false;
         if (!this.isInitialized) {
             Log.e("OptDexProcess", "Bundle Installer not initialized yet, process abort!");
         } else if (!this.notifyInstalled || noNeedNotifyUI) {
@@ -77,6 +82,12 @@ public class OptDexProcess {
                     finishInstalled();
                 }
                 log.debug("dexopt auto start bundles cost time = " + (System.currentTimeMillis() - currentTimeMillis) + " ms");
+                if (!RuntimeVariables.inSubProcess)
+                {
+                    runOptDexDelay();
+                    log.debug("dexopt delay start bundles cost time = " + (System.currentTimeMillis() - currentTimeMillis) + " ms");
+                }
+
             } else {
                 currentTimeMillis = System.currentTimeMillis();
                 runOptDexNonDelay();
@@ -115,10 +126,19 @@ public class OptDexProcess {
         }
     }
 
-    private void runOptDexDelay() {
- 
-        for (String location : ACDDConfig.STORE) {
+    private void runOptDexDelay()  {
+        ZipFile zipFile= null;
+        try {
+            zipFile = new ZipFile(mApplication.getApplicationInfo().sourceDir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (String location : ACDDConfig.DELAY) {
             Bundle bundle = ACDD.getInstance().getBundle(location);
+            if (bundle==null){
+                bundle= BundlesInstaller.getInstance().preInstallBundle(zipFile,location,mApplication);
+              //  bundle = ACDD.getInstance().getBundle(location);
+            }
             if (bundle != null) {
                 try {
                     ((BundleImpl) bundle).optDexFile();
@@ -128,7 +148,10 @@ public class OptDexProcess {
                     }
                     Log.e("OptDexProcess", "Error while dexopt >>>", e);
                 }
+            }else {
+
             }
+
         }
     }
 

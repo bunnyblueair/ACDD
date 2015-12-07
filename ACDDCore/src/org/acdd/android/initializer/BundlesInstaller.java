@@ -245,4 +245,26 @@ public class BundlesInstaller {
 			return false;
 		}
 	}
+	public Bundle preInstallBundle(ZipFile zipFile, String location, Application application) {
+
+
+		this.bundleDebug.installExternalBundle(location);
+		String fileNameFromEntryName = Utils.getFileNameFromPackage(location);
+
+		File archvieFile = new File(new File(application.getFilesDir().getParentFile(), "lib"), fileNameFromEntryName);
+		if (ACDD.getInstance().getBundle(location) != null) {
+			return null;
+		}
+		try {
+			if (archvieFile.exists()) {
+			return 	ACDD.getInstance().preInstallBundle(location, archvieFile);
+			} else {
+				return  ACDD.getInstance().preInstallBundle(location, zipFile.getInputStream(zipFile.getEntry(Utils.getEntryNameFromPackage(location))));
+			}
+			//return true;
+		} catch (Throwable e) {
+			Log.e("BundlesInstaller", "Could not install bundle.", e);
+			return null;
+		}
+	}
 }

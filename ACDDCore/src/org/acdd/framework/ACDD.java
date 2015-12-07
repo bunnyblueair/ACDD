@@ -158,11 +158,17 @@ public class ACDD {
             throws BundleException {
         return Framework.installNewBundle(location, inputStream);
     }
+    public Bundle preInstallBundle(String location, InputStream inputStream)
+            throws BundleException {
+        return Framework.preInstallNewBundle(location, inputStream);
+    }
 
     public Bundle installBundle(String location, File apkFile) throws BundleException {
         return Framework.installNewBundle(location, apkFile);
     }
-
+    public Bundle preInstallBundle(String location, File apkFile) throws BundleException {
+        return Framework.preInstallNewBundle(location, apkFile);
+    }
     public void updateBundle(String pkgName, InputStream inputStream)
             throws BundleException {
         Bundle bundle = Framework.getBundle(pkgName);

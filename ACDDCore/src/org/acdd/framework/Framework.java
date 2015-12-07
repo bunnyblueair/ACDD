@@ -422,7 +422,43 @@ public final class Framework {
 
         return bundleImpl;
     }
+    static BundleImpl preInstallNewBundle(String location, File apkFile) throws BundleException {
+        BundleImpl bundleImpl;
+        File mBundleArchiveFile = null;
+        try {
+            BundleLock.WriteLock(location);
+            bundleImpl = (BundleImpl) Framework.getBundle(location);
+            if (bundleImpl != null) {
+                BundleLock.WriteUnLock(location);
+            } else {
+                mBundleArchiveFile = new File(STORAGE_LOCATION, location);
 
+                ACDDFileLock.getInstance().LockExclusive(mBundleArchiveFile);
+                if (mBundleArchiveFile.exists()) {
+                    bundleImpl = restoreFromExistedBundle(location, mBundleArchiveFile);
+                    if (bundleImpl != null) {
+                        BundleLock.WriteUnLock(location);
+                        if (mBundleArchiveFile != null) {
+                            ACDDFileLock.getInstance().unLock(mBundleArchiveFile);
+                        }
+                    }
+                }
+                bundleImpl = new BundleImpl(mBundleArchiveFile, location, null, apkFile, false);
+                storeMetadata();
+                BundleLock.WriteUnLock(location);
+                if (mBundleArchiveFile != null) {
+                    ACDDFileLock.getInstance().unLock(mBundleArchiveFile);
+                }
+            }
+        } catch (Throwable e) {
+
+            e.printStackTrace();
+            BundleLock.WriteUnLock(location);
+            throw new BundleException(e.getMessage());
+        }
+
+        return bundleImpl;
+    }
     static boolean restoreBundle(String[] packageNames) {
 
         try {
@@ -460,6 +496,42 @@ public final class Framework {
                     }
                 }
                 bundleImpl = new BundleImpl(mBundleArchiveFile, location, archiveInputStream, null, true);
+                storeMetadata();
+                BundleLock.WriteUnLock(location);
+                if (mBundleArchiveFile != null) {
+                    ACDDFileLock.getInstance().unLock(mBundleArchiveFile);
+                }
+
+            }
+        } catch (Throwable v0) {
+            BundleLock.WriteUnLock(location);
+        }
+
+        return bundleImpl;
+    }
+
+    static BundleImpl preInstallNewBundle(String location, InputStream archiveInputStream) throws BundleException {
+        BundleImpl bundleImpl = null;
+        File mBundleArchiveFile = null;
+        try {
+            BundleLock.WriteLock(location);
+            bundleImpl = (BundleImpl) getBundle(location);
+            if (bundleImpl != null) {
+                BundleLock.WriteUnLock(location);
+
+            } else {
+                mBundleArchiveFile = new File(STORAGE_LOCATION, location);
+                ACDDFileLock.getInstance().LockExclusive(mBundleArchiveFile);
+                if (mBundleArchiveFile.exists()) {
+                    bundleImpl = restoreFromExistedBundle(location, mBundleArchiveFile);
+                    if (bundleImpl != null) {
+                        BundleLock.WriteUnLock(location);
+                        if (location != null) {
+                            ACDDFileLock.getInstance().unLock(mBundleArchiveFile);
+                        }
+                    }
+                }
+                bundleImpl = new BundleImpl(mBundleArchiveFile, location, archiveInputStream, null, false);
                 storeMetadata();
                 BundleLock.WriteUnLock(location);
                 if (mBundleArchiveFile != null) {

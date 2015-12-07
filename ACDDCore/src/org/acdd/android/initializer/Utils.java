@@ -48,6 +48,16 @@ import java.util.concurrent.ConcurrentHashMap;
  * Utils used for  initializer
  **/
 public class Utils {
+    /**get file name from entryName***/
+    public static String getFileNameFromPackage(String packageName) {
+
+        return "lib"+packageName.replaceAll("\\.","_")+".so";
+    }
+    /**get file name from entryName***/
+    public static String getEntryNameFromPackage(String packageName) {
+        String local = "lib/" + ACDDConfig.PRELOAD_DIR + "/";
+        return local+"lib"+packageName.replaceAll("\\.","_")+".so";
+    }
 
     /**get file name from entryName***/
     public static String getFileNameFromEntryName(String entryName) {

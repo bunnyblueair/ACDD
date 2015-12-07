@@ -123,6 +123,9 @@ public class ACDDFileLock {
         try {
             File lockFile = new File(bundleDexFile.getParentFile().getAbsolutePath().concat("/lock"));
             if (!lockFile.exists()) {
+                if (!lockFile.getParentFile().exists())
+                {
+                    lockFile.getParentFile().mkdirs();}
                 lockFile.createNewFile();
             }
             RandomAccessFile randomAccessFile = new RandomAccessFile(lockFile.getAbsolutePath(), "rw");
