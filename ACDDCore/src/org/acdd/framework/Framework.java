@@ -403,6 +403,7 @@ public final class Framework {
                         BundleLock.WriteUnLock(location);
                         if (mBundleArchiveFile != null) {
                             ACDDFileLock.getInstance().unLock(mBundleArchiveFile);
+                            return  bundleImpl;
                         }
                     }
                 }
