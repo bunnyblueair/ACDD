@@ -46,6 +46,7 @@ import org.acdd.runtime.ClassLoadFromBundle;
 import org.acdd.runtime.ClassNotFoundInterceptorCallback;
 import org.acdd.runtime.DelegateClassLoader;
 import org.acdd.runtime.DelegateComponent;
+import org.acdd.runtime.DelegateResources;
 import org.acdd.runtime.FrameworkLifecycleHandler;
 import org.acdd.runtime.InstrumentationHook;
 import org.acdd.runtime.PackageLite;
@@ -106,13 +107,13 @@ public class ACDD {
         this.frameworkLifecycleHandler = new FrameworkLifecycleHandler();
         Framework.frameworkListeners.add(this.frameworkLifecycleHandler);
         AndroidHack.hackH();
-        RuntimeVariables.inSubProcess=!application.getPackageName().equals(ACDDUtils.getProcessNameByPID(android.os.Process.myPid()));
+        RuntimeVariables.inSubProcess = !application.getPackageName().equals(ACDDUtils.getProcessNameByPID(android.os.Process.myPid()));
         // Framework.initialize(properties);
     }
 
     /**
-     *@since 1.0.0
-     * **/
+     * @since 1.0.0
+     **/
     private Resources initResources(Application application) throws Exception {
         Resources resources = application.getResources();
         if (resources != null) {
@@ -158,6 +159,7 @@ public class ACDD {
             throws BundleException {
         return Framework.installNewBundle(location, inputStream);
     }
+
     public Bundle preInstallBundle(String location, InputStream inputStream)
             throws BundleException {
         return Framework.preInstallNewBundle(location, inputStream);
@@ -166,9 +168,11 @@ public class ACDD {
     public Bundle installBundle(String location, File apkFile) throws BundleException {
         return Framework.installNewBundle(location, apkFile);
     }
+
     public Bundle preInstallBundle(String location, File apkFile) throws BundleException {
         return Framework.preInstallNewBundle(location, apkFile);
     }
+
     public void updateBundle(String pkgName, InputStream inputStream)
             throws BundleException {
         Bundle bundle = Framework.getBundle(pkgName);
@@ -187,6 +191,30 @@ public class ACDD {
         Bundle bundle = Framework.getBundle(pkgName);
         if (bundle != null) {
             bundle.update(mBundleFile);
+            return;
+        }
+        throw new BundleException("Could not update bundle " + pkgName
+                + ", because could not find it");
+    }
+
+    /*****
+     * update bundle  whitout reboot app
+     * Notice:this method is Experience!!,maybe  not stabe,don't use is product
+     *
+     * @deprecated not recommand
+     ******/
+    public void updateBundleForce(String pkgName, File mBundleFile) throws BundleException {
+        if (!mBundleFile.exists()) {
+            throw new BundleException("file not  found" + mBundleFile.getAbsolutePath());
+        }
+        BundleImpl bundle = (BundleImpl) Framework.getBundle(pkgName);
+        if (bundle != null) {
+            bundle.update(mBundleFile);
+            bundle.refresh();
+            try {
+                DelegateResources.newDelegateResources(RuntimeVariables.androidApplication, RuntimeVariables.delegateResources, bundle.getArchive().getArchiveFile().getAbsolutePath());
+            } catch (Exception e) {
+            }
             return;
         }
         throw new BundleException("Could not update bundle " + pkgName
@@ -334,6 +362,7 @@ public class ACDD {
             ClassNotFoundInterceptorCallback classNotFoundInterceptorCallback) {
         Framework.setClassNotFoundCallback(classNotFoundInterceptorCallback);
     }
+
     //start stub mode
     public List<ResolveInfo> queryNewIntentActivities(Intent intent, String str, int flags, int userid) {
 

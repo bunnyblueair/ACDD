@@ -216,9 +216,10 @@ public class WelcomeFragment extends Fragment implements Callback {
     }
 
     public void gotoMainActivity(boolean z) {
+        System.out.println("WelcomeFragment.gotoMainActivity()");
         if(start){
             start=true;
-            System.out.println("WelcomeFragment.gotoMainActivity()");
+
 
             return;
         }
