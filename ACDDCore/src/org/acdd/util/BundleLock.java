@@ -55,7 +55,10 @@ public class BundleLock {
             if (reentrantReadWriteLock == null) {
                 return;
             }
-            reentrantReadWriteLock.writeLock().unlock();
+            try {
+                reentrantReadWriteLock.writeLock().unlock();
+            }catch (IllegalMonitorStateException e){}
+
         }
     }
 
