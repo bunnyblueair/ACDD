@@ -817,17 +817,23 @@ public final class Framework {
                         return !str.matches("^[0-9]*");
                     }
                 });
-                int i = 0;
-                while (i < listFiles.length) {
-                    if (listFiles[i].isDirectory() && new File(listFiles[i], "meta").exists()) {
-                        try {
-                            System.out.println("RESTORED BUNDLE " + new BundleImpl(listFiles[i]).location);
-                        } catch (Exception e) {
-                            log.error(e.getMessage(), e.getCause());
+                for ( File tmpFile:listFiles){
+                    if (tmpFile.isDirectory() && new File(tmpFile, "meta").exists()) {
+                        for (String location:ACDDConfig.AUTO){
+                            if (location.equals(tmpFile.getName())){
+                                try {
+
+                                    System.out.println("RESTORED BUNDLE " + new BundleImpl(tmpFile).location);
+                                } catch (Exception e) {
+                                    log.error(e.getMessage(), e.getCause());
+                                }
+                                break;
+                            }
                         }
+
                     }
-                    i++;
                 }
+
                 return readInt;
             }
             System.out.println("Profile not found, performing clean start ...");
