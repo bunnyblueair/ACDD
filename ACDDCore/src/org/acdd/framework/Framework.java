@@ -29,22 +29,18 @@ package org.acdd.framework;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Build.VERSION;
-import android.os.Process;
 
 import org.acdd.framework.bundlestorage.BundleArchive;
+import org.acdd.log.ACDDMonitor;
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
-import org.acdd.log.ACDDMonitor;
 import org.acdd.runtime.ClassNotFoundInterceptorCallback;
 import org.acdd.runtime.RuntimeVariables;
 import org.acdd.sdk.BuildConfig;
 import org.acdd.util.ACDDFileLock;
 import org.acdd.util.BundleLock;
 import org.acdd.util.FileUtils;
-import org.acdd.util.ACDDUtils;
 import org.acdd.util.StringUtils;
-
-import org.osgi.framework.AdminPermission;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleException;
@@ -75,10 +71,8 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 
-//import org.osgi.framework.ServiceReference;
 
 public final class Framework {
-    private static final AdminPermission ADMIN_PERMISSION = new AdminPermission();
     private static String BASEDIR = null;
     private static String BUNDLE_LOCATION = null;
     static int CLASSLOADER_BUFFER_SIZE = 0;
