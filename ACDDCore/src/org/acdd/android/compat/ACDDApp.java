@@ -31,23 +31,19 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteException;
 import android.os.Build.VERSION;
-import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
 
 import org.acdd.android.initializer.ACDDInitializer;
 import org.acdd.android.initializer.BundleParser;
-import org.acdd.framework.InternalConstant;
 import org.acdd.runtime.ContextImplHook;
 import org.acdd.runtime.Globals;
-import org.acdd.util.ACDDUtils;
+import org.acdd.runtime.RuntimeVariables;
 
 
 /****ACDDApp, you can  extend  this class direct****/
@@ -92,23 +88,14 @@ public abstract class ACDDApp extends Application {
             e.printStackTrace();
         }
 
-        this.mACDDInitializer = new ACDDInitializer(this, getPackageName(),isUpdate());
+        this.mACDDInitializer = new ACDDInitializer(this, getPackageName());
 
         this.mACDDInitializer.init();
         accdInited=true;
+
+
     }
-    private boolean isUpdate() {
-        try {
-            PackageInfo packageInfo = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
-            SharedPreferences sharedPreferences =getSharedPreferences(InternalConstant.ACDD_CONFIGURE, 0);
-            int last_version_code = sharedPreferences.getInt("last_version_code", 0);
-            CharSequence last_version_name = sharedPreferences.getString("last_version_name", "");
-         return packageInfo.versionCode > last_version_code || ((packageInfo.versionCode == last_version_code && !TextUtils.equals(Globals.getInstalledVersionName(), last_version_name)) );
-        } catch (Throwable e) {
-            Log.e("ACDDInitializer", "Error to get PackageInfo >>>", e);
-            throw new RuntimeException(e);
-        }
-    }
+
     @Override
     public  void onCreate() {
         super.onCreate();
@@ -137,7 +124,7 @@ public abstract class ACDDApp extends Application {
 
     @Override
     public final SQLiteDatabase openOrCreateDatabase(String name, int mode, CursorFactory cursorFactory) {
-        String processName = ACDDUtils.getProcessNameByPID(Process.myPid());
+        String processName = RuntimeVariables.currentProcessName;
         if (!TextUtils.isEmpty(processName)) {
             Log.i("SQLiteDatabase", processName);
             if (!processName.equals(getPackageName())) {

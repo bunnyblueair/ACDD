@@ -26,8 +26,6 @@
  */
 package org.acdd.util;
 
-import android.os.Process;
-
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
 import org.acdd.runtime.RuntimeVariables;
@@ -66,7 +64,7 @@ public class ACDDFileLock {
 
     static {
         if (RuntimeVariables.androidApplication.getApplicationContext() != null) {
-            processName = ACDDUtils.getProcessNameByPID(Process.myPid());
+            processName = RuntimeVariables.currentProcessName;
         }
     }
 

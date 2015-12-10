@@ -52,7 +52,6 @@ import org.acdd.runtime.InstrumentationHook;
 import org.acdd.runtime.PackageLite;
 import org.acdd.runtime.RuntimeVariables;
 import org.acdd.runtime.stub.BundlePackageManager;
-import org.acdd.util.ACDDUtils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.BundleListener;
@@ -107,7 +106,7 @@ public class ACDD {
         this.frameworkLifecycleHandler = new FrameworkLifecycleHandler();
         Framework.frameworkListeners.add(this.frameworkLifecycleHandler);
         AndroidHack.hackH();
-        RuntimeVariables.inSubProcess = !application.getPackageName().equals(ACDDUtils.getProcessNameByPID(android.os.Process.myPid()));
+       // RuntimeVariables.inSubProcess = !application.getPackageName().equals(RuntimeVariables.);
         // Framework.initialize(properties);
     }
 

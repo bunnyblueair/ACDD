@@ -34,5 +34,6 @@ public class RuntimeVariables {
     public static DelegateClassLoader delegateClassLoader;
     public static Resources delegateResources;
     public  static  boolean inSubProcess=false;
+    public  static String currentProcessName;
 
 }

@@ -32,7 +32,6 @@ import org.acdd.framework.Framework;
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
 import org.acdd.runtime.RuntimeVariables;
-import org.acdd.util.ACDDUtils;
 import org.acdd.util.StringUtils;
 
 import java.io.File;
@@ -61,7 +60,7 @@ public class BundleArchive implements Archive {
     public BundleArchive(String location, File bundleDir) throws IOException {
         this.revisions = new TreeMap<Long, BundleArchiveRevision>();
         File[] listFiles = bundleDir.listFiles();
-        String currentProcessName = ACDDUtils.getProcessNameByPID(android.os.Process.myPid());
+        String currentProcessName = RuntimeVariables.currentProcessName;
         if (listFiles != null) {
             for (File file : listFiles) {
                 if (file.getName().startsWith(REVISION_DIRECTORY)) {

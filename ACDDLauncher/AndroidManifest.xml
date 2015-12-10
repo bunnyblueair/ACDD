@@ -148,7 +148,7 @@
                 android:name="bundleLocation"
                 android:value="com.acdd.android.game2" />
         </service>
-
+<activity android:name="com.acdd.testapp1.MainActivity"/>
         <!--<receiver-->
             <!--android:name="com.acdd.android.game2.GameStaticReceiver"-->
             <!--android:enabled="true"-->

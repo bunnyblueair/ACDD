@@ -1016,7 +1016,7 @@ public final class Framework {
     private static void MergeWirteAheads(File storageLocation) {
         try {
             File wal = new File(STORAGE_LOCATION, "wal");
-            String curProcessName = ACDDUtils.getProcessNameByPID(Process.myPid());
+            String curProcessName = RuntimeVariables.currentProcessName;
             log.debug("restoreProfile in process " + curProcessName);
             String packageName = RuntimeVariables.androidApplication.getPackageName();
             if (curProcessName != null && packageName != null && curProcessName.equals(packageName)) {

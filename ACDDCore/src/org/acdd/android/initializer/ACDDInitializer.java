@@ -28,8 +28,11 @@ package org.acdd.android.initializer;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.Build.VERSION;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.acdd.android.task.Coordinator;
@@ -37,12 +40,14 @@ import org.acdd.android.task.Coordinator.TaggedRunnable;
 import org.acdd.bundleInfo.BundleInfoList;
 import org.acdd.framework.ACDD;
 import org.acdd.framework.InternalConstant;
+import org.acdd.hack.ACDDHacks;
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
 import org.acdd.runtime.Globals;
 import org.acdd.runtime.RuntimeVariables;
 import org.acdd.util.ApkUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
 public class ACDDInitializer {
@@ -58,11 +63,11 @@ public class ACDDInitializer {
     private boolean isUpdate = false;
 
 
-    public ACDDInitializer(Application application, String packagename, boolean isUpdate) {
+    public ACDDInitializer(Application application, String packagename) {
         this.mApplication = application;
         this.mPackageName = packagename;
 
-        this.isUpdate = isUpdate;
+
         if (application.getPackageName().equals(packagename)) {
             inTargetApp = true;
         }
@@ -79,10 +84,20 @@ public class ACDDInitializer {
             Log.e("ACDDInitializer", "Could not init ACDD framework !!!", e);
             throw new RuntimeException("ACDD initialization fail" + e.getMessage());
         }
+        try {
+            RuntimeVariables.currentProcessName= (String) ACDDHacks.ActivityThread_currentProcessName
+                    .invoke(ACDDHacks.ActivityThread.getmClass());
+            RuntimeVariables.inSubProcess=  !RuntimeVariables.currentProcessName.equals(mPackageName);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        isUpdate=isUpdate();
     }
 
     public void startUp() {
-
+        if (RuntimeVariables.inSubProcess){
+            this.isUpdate=false;
+        }
         this.mProperties.put(InternalConstant.BOOT_ACTIVITY, InternalConstant.BOOT_ACTIVITY);
         this.mProperties.put(InternalConstant.COM_ACDD_DEBUG_BUNDLES, "true");
         this.mProperties.put(InternalConstant.ACDD_APP_DIRECTORY, this.mApplication.getFilesDir().getParent());
@@ -96,6 +111,7 @@ public class ACDDInitializer {
                     this.mProperties.put(InternalConstant.ACDD_PUBLIC_KEY, SecurityBundleListner.PUBLIC_KEY);
                     ACDD.getInstance().addBundleListener(new SecurityBundleListner());
                 }
+
                 if (this.isUpdate || this.mDebug.isDebugable()) {
                     this.mProperties.put("osgi.init", "true");
                 }
@@ -183,5 +199,22 @@ public class ACDDInitializer {
         return true;
     }
 
+    private boolean isUpdate() {
+        if (RuntimeVariables.inSubProcess){
+            return  false;
+        }
 
+        try {
+
+            PackageInfo packageInfo = mApplication.getPackageManager().getPackageInfo(mApplication.getPackageName(), 0);
+            SharedPreferences sharedPreferences =mApplication.getSharedPreferences(InternalConstant.ACDD_CONFIGURE, 0);
+            int last_version_code = sharedPreferences.getInt("last_version_code", 0);
+            CharSequence last_version_name = sharedPreferences.getString("last_version_name", "");
+            boolean isUpdate= packageInfo.versionCode > last_version_code || ((packageInfo.versionCode == last_version_code && !TextUtils.equals(Globals.getInstalledVersionName(), last_version_name)) );
+            return  isUpdate;
+        } catch (Throwable e) {
+            Log.e("ACDDInitializer", "Error to get PackageInfo >>>", e);
+            throw new RuntimeException(e);
+        }
+    }
 }
