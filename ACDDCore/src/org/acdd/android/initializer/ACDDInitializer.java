@@ -40,14 +40,13 @@ import org.acdd.android.task.Coordinator.TaggedRunnable;
 import org.acdd.bundleInfo.BundleInfoList;
 import org.acdd.framework.ACDD;
 import org.acdd.framework.InternalConstant;
-import org.acdd.hack.ACDDHacks;
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
 import org.acdd.runtime.Globals;
 import org.acdd.runtime.RuntimeVariables;
 import org.acdd.util.ApkUtils;
+import org.acdd.util.ProcessUtil;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
 public class ACDDInitializer {
@@ -84,13 +83,10 @@ public class ACDDInitializer {
             Log.e("ACDDInitializer", "Could not init ACDD framework !!!", e);
             throw new RuntimeException("ACDD initialization fail" + e.getMessage());
         }
-        try {
-            RuntimeVariables.currentProcessName= (String) ACDDHacks.ActivityThread_currentProcessName
-                    .invoke(ACDDHacks.ActivityThread.getmClass());
+
+            RuntimeVariables.currentProcessName= ProcessUtil.getCurrentProcessName();
             RuntimeVariables.inSubProcess=  !RuntimeVariables.currentProcessName.equals(mPackageName);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+
         isUpdate=isUpdate();
     }
 

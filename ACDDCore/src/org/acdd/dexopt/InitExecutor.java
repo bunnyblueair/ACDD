@@ -42,6 +42,7 @@ public class InitExecutor {
     static final Logger log;
     private static boolean sDexOptLoaded;
     static boolean isART = false;
+    /**used for art*/
     private static Map<String, String> ABI_TO_INSTRUCTION_SET_MAP = new HashMap<String, String>();
     static String defaultInstruction;
 
@@ -87,13 +88,18 @@ public class InitExecutor {
             if (sDexOptLoaded) {
                 if (isART ) {
                     if (ACDDConfig.optART)
-                    dexopt(srcDexPath, oDexFilePath, true, defaultInstruction);
+                    {
+                        dexopt(srcDexPath, oDexFilePath, true, defaultInstruction);
+                        return  true;
+                    }
+
                 } else {
                     dexopt(srcDexPath, oDexFilePath, false, "");
+                    return  true;
                 }
 
 
-                return true;
+
             }
         } catch (Throwable e) {
             log.error("Exception while try to call native dexopt >>>", e);

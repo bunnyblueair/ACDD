@@ -26,15 +26,10 @@
  */
 package org.acdd.util;
 
-import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-
-import org.acdd.hack.AssertionArrayException;
 import org.acdd.hack.ACDDHacks;
+import org.acdd.hack.AssertionArrayException;
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
-import org.acdd.runtime.PackageLite;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -73,25 +68,7 @@ public class ApkUtils {
             return false;
         }
     }
-
-    public static final PackageInfo parsePackageInfo(Context context, String path) {
-        if (!assertAtlasHacks()) {
-            return null;
-        }
-        try {
-            PackageLite parse = PackageLite.parse(new File(path));
-            PackageInfo packageInfo = new PackageInfo();
-            packageInfo.packageName = parse.packageName;
-            packageInfo.versionCode = parse.versionCode;
-            packageInfo.versionName = parse.versionName;
-            packageInfo.applicationInfo = new ApplicationInfo();
-            packageInfo.applicationInfo.metaData = parse.metaData;
-            return packageInfo;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+    
 
     public static final String getApkPublicKey(String apkPath) {
         JarFile jarFile = null;

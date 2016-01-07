@@ -26,108 +26,17 @@
  */
 package org.acdd.util;
 
-import android.text.TextUtils;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtils {
-    public static boolean saveString(String str, File file, boolean append) {
-
-        if (TextUtils.isEmpty(str) || file == null) {
-            return false;
-        }
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                return false;
-            }
-        }
-        OutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(file, append);
-
-            fileOutputStream.write((str + "\r\n").getBytes());
-            fileOutputStream.flush();
-            if (fileOutputStream != null) {
-                try {
-                    fileOutputStream.close();
-                } catch (IOException e2) {
-                    e2.printStackTrace();
-                }
-            }
-
-            return true;
-        } catch (FileNotFoundException e4) {
-            return false;
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            if (fileOutputStream != null) {
-                try {
-                    fileOutputStream.close();
-                } catch (IOException e3) {
-                    e3.printStackTrace();
-                }
-            }
-
-        }
-        return false;
-    }
-
-    public static boolean saveStrings(String[] dataArrs, File file) {
-
-        int i = 0;
-        if (dataArrs == null || dataArrs.length == 0 || file == null) {
-            return false;
-        }
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                return false;
-            }
-        }
-        OutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(file);
-
-            int length = dataArrs.length;
-            while (i < length) {
-                fileOutputStream.write((dataArrs[i] + "\r\n").getBytes());
-                i++;
-            }
-            fileOutputStream.flush();
-
-            return true;
-        } catch (FileNotFoundException e4) {
-            return false;
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-
-            if (fileOutputStream != null) {
-                try {
-                    fileOutputStream.close();
-                } catch (IOException e2) {
-                    e2.printStackTrace();
-                }
-            }
-        }
-        return false;
-    }
 
     public static String[] getStrings(File file) {
 
@@ -194,16 +103,4 @@ public class FileUtils {
         file.delete();
     }
 
-    public static boolean validationFile(String filePath) {
-
-        try {
-            FileInputStream fileInputStream = new FileInputStream(filePath);
-            fileInputStream.close();
-        } catch (FileNotFoundException e) {
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return false;
-    }
 }

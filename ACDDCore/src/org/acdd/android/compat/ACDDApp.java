@@ -41,6 +41,7 @@ import android.util.Log;
 
 import org.acdd.android.initializer.ACDDInitializer;
 import org.acdd.android.initializer.BundleParser;
+import org.acdd.framework.ACDD;
 import org.acdd.runtime.ContextImplHook;
 import org.acdd.runtime.Globals;
 import org.acdd.runtime.RuntimeVariables;
@@ -153,6 +154,13 @@ public abstract class ACDDApp extends Application {
             }
             return sQLiteDatabase;
         }
+    }
+
+    @Override
+    public void onLowMemory() {
+        ACDD.getInstance().onLowMemory();
+        super.onLowMemory();
+
     }
 }
 

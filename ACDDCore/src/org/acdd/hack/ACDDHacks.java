@@ -67,7 +67,7 @@ public class ACDDHacks extends HackDeclaration implements
     public static HackedClass<Object> ActivityThread;
     /** Reference to singleton  ActivityThread*/
     public static HackedMethod ActivityThread_currentActivityThread;
-    public static HackedMethod ActivityThread_currentProcessName;
+    //public static HackedMethod ActivityThread_currentProcessName;
     public static HackedField<Object, ArrayList<Application>> ActivityThread_mAllApplications;
     public static HackedField<Object, Application> ActivityThread_mInitialApplication;
     public static HackedField<Object, Instrumentation> ActivityThread_mInstrumentation;
@@ -304,8 +304,8 @@ public class ACDDHacks extends HackDeclaration implements
     private static void allMethods() throws HackAssertionException {
         ActivityThread_currentActivityThread = ActivityThread.method(
                 "currentActivityThread");
-        ActivityThread_currentProcessName = ActivityThread.method(
-                "currentProcessName");
+//        ActivityThread_currentProcessName = ActivityThread.method(
+//                "currentProcessName");
         AssetManager_addAssetPath = AssetManager.method("addAssetPath",
                 String.class);
         Application_attach = Application.method("attach", Context.class);
