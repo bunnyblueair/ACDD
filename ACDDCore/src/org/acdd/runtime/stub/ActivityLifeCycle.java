@@ -27,14 +27,17 @@
 
 package org.acdd.runtime.stub;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
+import android.os.Build;
 import android.os.Bundle;
 
 /**
  * Created by BunnyBlue on 10/3/15.
  */
 
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class ActivityLifeCycle implements Application.ActivityLifecycleCallbacks {
     public ActivityLifeCycle() {
 

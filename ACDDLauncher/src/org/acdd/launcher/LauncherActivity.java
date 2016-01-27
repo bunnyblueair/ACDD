@@ -28,11 +28,12 @@ package org.acdd.launcher;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
 import org.acdd.launcher.welcome.WelcomeFragment;
 
 
-public class LauncherActivity extends Activity {
+public class LauncherActivity extends FragmentActivity {
 	WelcomeFragment mFragment;
 
 	@Override
@@ -41,7 +42,7 @@ public class LauncherActivity extends Activity {
 //		setContentView(R.layout.activity_loader_tesst);
         setContentView(R.layout.welcome_frame);
         this.mFragment = new WelcomeFragment();
-        getFragmentManager().beginTransaction().add(R.id.frame, this.mFragment).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().add(R.id.frame, this.mFragment).commitAllowingStateLoss();
 	}
 	
 

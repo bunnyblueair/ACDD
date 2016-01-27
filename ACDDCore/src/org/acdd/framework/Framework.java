@@ -36,7 +36,7 @@ import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
 import org.acdd.runtime.ClassNotFoundInterceptorCallback;
 import org.acdd.runtime.RuntimeVariables;
-import org.acdd.sdk.BuildConfig;
+
 import org.acdd.util.ACDDFileLock;
 import org.acdd.util.BundleLock;
 import org.acdd.util.FileUtils;
@@ -80,7 +80,7 @@ public final class Framework {
     static boolean DEBUG_CLASSLOADING = true;
     static boolean DEBUG_PACKAGES = true;
     static boolean DEBUG_SERVICES = true;
-    static final String FRAMEWORK_VERSION = BuildConfig.VERSION_NAME;
+    static final String FRAMEWORK_VERSION = org.acdd.sdk.BuildConfig.VERSION_NAME;
     private static final String DOWN_GRADE_FILE = "down_grade_list";
     static int LOG_LEVEL;
     static String STORAGE_LOCATION;
@@ -557,7 +557,7 @@ public final class Framework {
         int startlevel;
         frameworkStartupShutdown = true;
         System.out.println("---------------------------------------------------------");
-        System.out.println("  ACDD OSGI "+ BuildConfig.VERSION_NAME+"   on " + Build.MODEL + "/" + Build.CPU_ABI + "/"
+        System.out.println("  ACDD OSGI "+ FRAMEWORK_VERSION+"   on " + Build.MODEL + "/" + Build.CPU_ABI + "/"
                 + VERSION.RELEASE +" SDK version "+Build.VERSION.SDK_INT+ " starting ...");
         System.out.println("---------------------------------------------------------");
         long currentTimeMillis = System.currentTimeMillis();
