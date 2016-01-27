@@ -53,3 +53,13 @@ android {//you need use buildToolsVersion 23.x gradle plugin 1.3.+
 The MIT License (MIT) Copyright (c) 2015 Bunny Blue,achellies
 
 # [Feature @ Wiki](https://github.com/bunnyblue/ACDD/wiki#feature)
+
+# Android Support
+
+| Android version        | Status           | 
+| ------------- |:-------------:| 
+| Android 6.0      | tested | 
+| Android 5.0     | tested      |   
+| Android  4.0 | tested     |  
+| Android 3.x | unsupported|
+| Android 2.x | unsupported|
