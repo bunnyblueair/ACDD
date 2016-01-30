@@ -26,6 +26,8 @@
  */
 package org.acdd.runtime;
 
+import android.os.Build;
+
 import org.acdd.framework.ACDDConfig;
 import org.acdd.log.Logger;
 import org.acdd.log.LoggerFactory;
@@ -79,7 +81,10 @@ public class FrameworkLifecycleHandler implements FrameworkListener {
         }
         if (ACDDConfig.stubModeEnable)
         {
-            RuntimeVariables.androidApplication.registerActivityLifecycleCallbacks(new ActivityLifeCycle());
+            if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+            {
+                RuntimeVariables.androidApplication.registerActivityLifecycleCallbacks(new ActivityLifeCycle());
+            }
 
         }
         log.info("started() spend " + (System.currentTimeMillis() - currentTimeMillis) + " milliseconds");

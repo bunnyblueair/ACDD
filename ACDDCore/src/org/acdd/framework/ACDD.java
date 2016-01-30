@@ -65,12 +65,12 @@ import java.util.Properties;
 
 /**
  * ACDD  framework controller
- * <li>app upgrade {@link #updateBundle(String location, InputStream inputStream) updateBundle} or
- * {@link #updateBundle(String location, File apkFile updateBundle) updateBundle}</li>
- * <li>app install see {@link #installBundle(String location, InputStream inputStream) installBundle}
- * or {@link #installBundle(String location, File apkFile) installBundle}</li>
- * <li>app uninstall {@link #uninstallBundle(String pkgName)}</li>
- * <li>bundle  is plugin mapping,location is bundle's package name</li>
+ * app upgrade {@link ACDD#updateBundle(String , InputStream ) updateBundle} or
+ * {@link ACDD#updateBundle(String ,File  ) updateBundle},
+ * ,app install see {@link ACDD#installBundle(String location, InputStream inputStream)}
+ * or {@link #installBundle(String , File ) installBundle},
+ * app uninstall {@link #uninstallBundle(String)},
+ * bundle  is plugin mapping,location is bundle's package name.
  **/
 public class ACDD {
     protected static ACDD instance;
@@ -97,8 +97,8 @@ public class ACDD {
     }
 
     /***
-     * acdd framework  init injection ,include ClassLoader,Resource,android Instrumentation<br/>
-     * <br>more info see  {@link ACDDHacks ACDDHacks} and {@link AndroidHack AndroidHack}</br>
+     * acdd framework  init injection ,include ClassLoader,Resource,android Instrumentation
+     * ,more info see  {@link ACDDHacks ACDDHacks} and {@link AndroidHack AndroidHack}
      *****/
     public void init(Application application)
             throws Exception {
@@ -196,7 +196,6 @@ public class ACDD {
      * @param location    notice!,this param is your target bundle package name,must be right
      * @param inputStream bundle  archive's inputstream
      * @return {@link BundleImpl BundleImpl}
-     * @see {@link #installBundle(String location, File apkFile) installBundle use  file}
      **/
     public Bundle installBundle(String location, InputStream inputStream)
             throws BundleException {
@@ -209,7 +208,6 @@ public class ACDD {
      * @param location notice!,this param is your target bundle package name,must be right
      * @param apkFile  bundle  archive file
      * @return {@link BundleImpl BundleImpl}
-     * @see {@link #installBundle(String location, InputStream inputStream) installBundle use  InputStream}
      **/
     public Bundle installBundle(String location, File apkFile) throws BundleException {
         return Framework.installNewBundle(location, apkFile);
@@ -248,7 +246,6 @@ public class ACDD {
      * @param location    bundle's package name
      * @param inputStream bundle archive stream
      * @throws BundleException
-     * @see {@link #updateBundle(String pkgName, File mBundleFile) updateBundle}
      */
     public void updateBundle(String location, InputStream inputStream)
             throws BundleException {
@@ -267,7 +264,6 @@ public class ACDD {
      * @param pkgName     bundle's package name
      * @param mBundleFile bundle archive file
      * @throws BundleException
-     * @see {@link #updateBundle(String location, InputStream inputStream) updateBundle}
      */
     public void updateBundle(String pkgName, File mBundleFile) throws BundleException {
         if (!mBundleFile.exists()) {
@@ -283,7 +279,7 @@ public class ACDD {
     }
 
     /**
-     * update bundle  whitout reboot app</br>
+     * update bundle  whitout reboot app
      * Notice:this method is Experience!!,maybe  not stabe,don't use is product better
      *
      * @param location    bundle package name
