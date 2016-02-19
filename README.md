@@ -26,7 +26,8 @@ The MIT License (MIT) Copyright (c) 2015 Bunny Blue,achellies<br>
 download aapt from repo,and  you should use build-tool version 23.x.x,
 write your plugin as normal app, ant build  with  hacked aapt.
 ### plugin resource notice
-```
+```groovy
+
 android {//you need use buildToolsVersion 23.x gradle plugin 1.3.+
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
