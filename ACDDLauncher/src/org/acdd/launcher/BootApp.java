@@ -35,9 +35,9 @@ import org.acdd.framework.InternalConstant;
 public class BootApp extends ACDDApp {
 	static{
 		ACDDConfig.DELAY = new String[]{"com.acdd.android.game2","com.acdd.testapp1","com.acdd.testapp2"};
-		ACDDConfig.AUTO = new String[]{"com.acdd.homelauncher","cn.acdd.qrcode","com.acdd.universalimageloader.sample"};
+		ACDDConfig.AUTO = new String[]{"com.umeng.fb.example","com.acdd.homelauncher","cn.acdd.qrcode","com.acdd.universalimageloader.sample"};
 		ACDDConfig.STORE = new String[]{"com.acdd.android.appcenter"};
-		ACDDConfig.stubModeEnable=false;
+		ACDDConfig.stubModeEnable=true;
 	}
 
 	
