@@ -49,7 +49,7 @@ android {//you need use buildToolsVersion 23.x gradle plugin 1.3.+
 
 # License
  [![License](https://img.shields.io/badge/License-MIT%20License-brightgreen.svg)]()<br>
-The MIT License (MIT) Copyright (c) 2015 Bunny Blue,achellies
+The MIT License (MIT) Copyright (c) 2015 Bunny Blue
 
 # [Feature @ Wiki](https://gitlab.com/bunnyblue/ACDD/wiki#feature)
 
