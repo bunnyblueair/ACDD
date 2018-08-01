@@ -58,6 +58,6 @@ android {
 
 # License
  [![License](https://img.shields.io/badge/License-MIT%20License-brightgreen.svg)]()<br>
-The MIT License (MIT) Copyright (c) 2015 Bunny Blue,achellies
+The MIT License (MIT) Copyright (c) 2015 Bunny Blue
 
 # [功能详情 @ Wiki](https://gitlab.com/bunnyblue/ACDD/wiki#feature-zh)
