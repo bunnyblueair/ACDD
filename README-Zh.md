@@ -12,12 +12,11 @@ ACDDCore Android动态部署框架（你可以认为是插件，但又与插件�
 
   <br>代码遵循MIT License，Android动态部署框架,Activity 、Receiver支持stub模式，有bug的话可以在issue里面提交。</br>
 
-### ，示例以及编译工具已经移动到 https://github.com/bunnyblue/ACDDExtension
+### ，示例以及编译工具已经移动到 https://gitlab.com/bunnyblue/ACDDExtension
 
 
 ### Contributors
-[achellies](https://github.com/achellies)<br>
-[BunnyBlue](https://github.com/bunnyblue)<br>
+[BunnyBlue](https://gitlab.com/bunnyblue)<br>
 
 ## plugin start
 从ACDDExt下载aapt，不再支持eclipse，build-tool为23
@@ -51,14 +50,14 @@ android {
 
 
 ##Demo Apk & Gif演示动画
-<a href="https://github.com/bunnyblue/ACDDExtension/blob/master/Dist/ACDDLauncher.apk">
+<a href="https://gitlab.com/bunnyblue/ACDDExtension/blob/master/Dist/ACDDLauncher.apk">
  点我下载Demo.apk
 </a>
 
-![Sample Gif](https://github.com/bunnyblue/ACDDExtension/raw/master/art/demo.gif)
+![Sample Gif](https://gitlab.com/bunnyblue/ACDDExtension/raw/master/art/demo.gif)
 
 # License
  [![License](https://img.shields.io/badge/License-MIT%20License-brightgreen.svg)]()<br>
 The MIT License (MIT) Copyright (c) 2015 Bunny Blue,achellies
 
-# [功能详情 @ Wiki](https://github.com/bunnyblue/ACDD/wiki#feature-zh)
+# [功能详情 @ Wiki](https://gitlab.com/bunnyblue/ACDD/wiki#feature-zh)
