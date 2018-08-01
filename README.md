@@ -15,12 +15,10 @@ The MIT License (MIT) Copyright (c) 2015 Bunny Blue,achellies<br>
 
   <br>use patched aapt  to build Dynamic Module，it's different with  some plugin frameworks which  implement through proxy，any  question open a issue</br>
 
-# Simple Project& Build System(aapt and ...) has Moved to https://github.com/bunnyblue/ACDDExtension
+# Simple Project& Build System(aapt and ...) has Moved to https://gitlab.com/bunnyblue/ACDDExtension
 
 
-### Contributors
-[achellies](https://github.com/achellies)<br>
-[BunnyBlue](https://github.com/bunnyblue)<br>
+
 
 ## plugin start
 download aapt from repo,and  you should use build-tool version 23.x.x,
@@ -43,17 +41,17 @@ android {//you need use buildToolsVersion 23.x gradle plugin 1.3.+
 ```
 
 ##Sample & Art
-<a href="https://github.com/bunnyblue/ACDDExtension/blob/master/Dist/ACDDLauncher.apk">
+<a href="https://gitlab.com/bunnyblue/ACDDExtension/blob/master/Dist/ACDDLauncher.apk">
   Sample Apk,you can download from here
 </a>
 
-![Sample Gif](https://github.com/bunnyblue/ACDDExtension/raw/master/art/demo.gif)
+![Sample Gif](https://gitlab.com/bunnyblue/ACDDExtension/raw/master/art/demo.gif)
 
 # License
  [![License](https://img.shields.io/badge/License-MIT%20License-brightgreen.svg)]()<br>
 The MIT License (MIT) Copyright (c) 2015 Bunny Blue,achellies
 
-# [Feature @ Wiki](https://github.com/bunnyblue/ACDD/wiki#feature)
+# [Feature @ Wiki](https://gitlab.com/bunnyblue/ACDD/wiki#feature)
 
 # Android Support
 
