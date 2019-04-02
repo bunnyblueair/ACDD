@@ -1,3 +1,6 @@
+[![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu)
+[![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
+
 [![Android Gems](http://www.android-gems.com/badge/bunnyblue/ACDD.svg?branch=master)](http://www.android-gems.com/lib/bunnyblue/ACDD)
 
 # ACDDCore  non-Proxy  Android Dynamic Deployment Framework
